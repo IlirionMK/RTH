@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+docs/**/*.aux
+docs/**/*.log
+docs/**/*.out
+docs/**/*.toc
+docs/**/*.synctex.gz
+docs/**/*.fdb_latexmk
+docs/**/*.fls

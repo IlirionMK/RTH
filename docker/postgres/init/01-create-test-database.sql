@@ -1,0 +1,1 @@
+CREATE DATABASE rth_test OWNER rth;
