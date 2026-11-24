@@ -12,56 +12,56 @@ class TokenTest extends TestCase
 
     public function test_user_logs_in_and_gets_token(): void
     {
-        $user = User::factory()->create(['email' => 'jan@example.com']);
+        $user = User::factory()->create(['email' => 'test@example.com']);
 
         $this->postJson(route('tokens.store'), [
-            'email' => 'jan@example.com',
+            'email' => 'test@example.com',
             'password' => 'password',
-            'device_name' => 'iPhone',
+            'device_name' => 'phone',
         ])
             ->assertCreated()
             ->assertHeader('Location', route('tokens.destroy'))
-            ->assertJsonPath('data.user.email', 'jan@example.com')
+            ->assertJsonPath('data.user.email', 'test@example.com')
             ->assertJsonStructure(['data' => ['token']]);
 
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $user->id,
-            'name' => 'iPhone',
+            'name' => 'phone',
         ]);
     }
 
     public function test_token_gives_access_to_protected_resources(): void
     {
-        User::factory()->create(['email' => 'jan@example.com']);
+        User::factory()->create(['email' => 'test@example.com']);
 
         $token = $this->postJson(route('tokens.store'), [
-            'email' => 'jan@example.com',
+            'email' => 'test@example.com',
             'password' => 'password',
-            'device_name' => 'iPhone',
+            'device_name' => 'phone',
         ])->json('data.token');
 
         $this->getJson(route('profile.show'), ['Authorization' => "Bearer $token"])
             ->assertOk()
-            ->assertJsonPath('data.email', 'jan@example.com');
+            ->assertJsonPath('data.email', 'test@example.com');
     }
 
     public function test_wrong_password_and_unknown_email_give_the_same_message(): void
     {
-        User::factory()->create(['email' => 'jan@example.com']);
+        User::factory()->create(['email' => 'test@example.com']);
 
         $wrongPassword = $this->postJson(route('tokens.store'), [
-            'email' => 'jan@example.com',
+            'email' => 'test@example.com',
             'password' => 'wrong-password',
-            'device_name' => 'iPhone',
+            'device_name' => 'phone',
         ])
             ->assertUnprocessable()
             ->assertJsonMissingValidationErrors('password')
             ->json('errors.email.0');
 
         $unknownEmail = $this->postJson(route('tokens.store'), [
-            'email' => 'anna@example.com',
+            'email' => 'unknown@example.com',
             'password' => 'password',
-            'device_name' => 'iPhone',
+            'device_name' => 'phone',
         ])
             ->assertUnprocessable()
             ->assertJsonMissingValidationErrors('password')
@@ -91,7 +91,7 @@ class TokenTest extends TestCase
     public function test_logout_revokes_current_token(): void
     {
         $user = User::factory()->create();
-        $token = $user->createToken('iPhone')->plainTextToken;
+        $token = $user->createToken('phone')->plainTextToken;
 
         $this->deleteJson(route('tokens.destroy'), [], ['Authorization' => "Bearer $token"])
             ->assertNoContent();
@@ -105,8 +105,8 @@ class TokenTest extends TestCase
     public function test_logout_keeps_other_tokens(): void
     {
         $user = User::factory()->create();
-        $phone = $user->createToken('iPhone')->plainTextToken;
-        $laptop = $user->createToken('web');
+        $phone = $user->createToken('phone')->plainTextToken;
+        $laptop = $user->createToken('laptop');
 
         $this->deleteJson(route('tokens.destroy'), [], ['Authorization' => "Bearer $phone"])
             ->assertNoContent();

@@ -14,33 +14,33 @@ class RegistrationTest extends TestCase
     public function test_user_registers_with_name_email_and_password(): void
     {
         $this->postJson(route('users.store'), [
-            'name' => 'Jan Kowalski',
-            'email' => 'jan@example.com',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
             'password' => 'secret-password',
             'password_confirmation' => 'secret-password',
         ])
             ->assertCreated()
             ->assertHeader('Location', route('profile.show'))
-            ->assertJsonPath('data.name', 'Jan Kowalski')
-            ->assertJsonPath('data.email', 'jan@example.com')
+            ->assertJsonPath('data.name', 'Test User')
+            ->assertJsonPath('data.email', 'test@example.com')
             ->assertJsonMissingPath('data.password');
 
-        $user = User::where('email', 'jan@example.com')->firstOrFail();
+        $user = User::where('email', 'test@example.com')->firstOrFail();
         $this->assertTrue(Hash::check('secret-password', $user->password));
     }
 
     public function test_new_profile_is_private(): void
     {
         $this->postJson(route('users.store'), [
-            'name' => 'Jan Kowalski',
-            'email' => 'jan@example.com',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
             'password' => 'secret-password',
             'password_confirmation' => 'secret-password',
         ])
             ->assertCreated()
             ->assertJsonPath('data.is_public', false);
 
-        $this->assertDatabaseHas('users', ['email' => 'jan@example.com', 'is_public' => false]);
+        $this->assertDatabaseHas('users', ['email' => 'test@example.com', 'is_public' => false]);
     }
 
     public function test_registration_requires_name_email_and_password(): void
@@ -52,11 +52,11 @@ class RegistrationTest extends TestCase
 
     public function test_email_must_be_unique(): void
     {
-        User::factory()->create(['email' => 'jan@example.com']);
+        User::factory()->create(['email' => 'test@example.com']);
 
         $this->postJson(route('users.store'), [
-            'name' => 'Jan Kowalski',
-            'email' => 'jan@example.com',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
             'password' => 'secret-password',
             'password_confirmation' => 'secret-password',
         ])
@@ -67,8 +67,8 @@ class RegistrationTest extends TestCase
     public function test_password_must_be_confirmed(): void
     {
         $this->postJson(route('users.store'), [
-            'name' => 'Jan Kowalski',
-            'email' => 'jan@example.com',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
             'password' => 'secret-password',
             'password_confirmation' => 'other-password',
         ])

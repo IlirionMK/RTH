@@ -14,14 +14,14 @@ class ProfileTest extends TestCase
 
     public function test_user_sees_own_profile(): void
     {
-        $user = User::factory()->create(['name' => 'Jan Kowalski', 'email' => 'jan@example.com']);
+        $user = User::factory()->create(['name' => 'Test User', 'email' => 'test@example.com']);
         Sanctum::actingAs($user);
 
         $this->getJson(route('profile.show'))
             ->assertOk()
             ->assertJsonPath('data.id', $user->id)
-            ->assertJsonPath('data.name', 'Jan Kowalski')
-            ->assertJsonPath('data.email', 'jan@example.com')
+            ->assertJsonPath('data.name', 'Test User')
+            ->assertJsonPath('data.email', 'test@example.com')
             ->assertJsonPath('data.is_public', false);
     }
 
@@ -31,34 +31,34 @@ class ProfileTest extends TestCase
         Sanctum::actingAs($user);
 
         $this->patchJson(route('profile.update'), [
-            'name' => 'Anna Nowak',
-            'email' => 'anna@example.com',
+            'name' => 'Renamed User',
+            'email' => 'renamed@example.com',
         ])
             ->assertOk()
-            ->assertJsonPath('data.name', 'Anna Nowak')
-            ->assertJsonPath('data.email', 'anna@example.com');
+            ->assertJsonPath('data.name', 'Renamed User')
+            ->assertJsonPath('data.email', 'renamed@example.com');
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'name' => 'Anna Nowak',
-            'email' => 'anna@example.com',
+            'name' => 'Renamed User',
+            'email' => 'renamed@example.com',
         ]);
     }
 
     public function test_user_keeps_own_email(): void
     {
-        $user = User::factory()->create(['email' => 'jan@example.com']);
+        $user = User::factory()->create(['email' => 'test@example.com']);
         Sanctum::actingAs($user);
 
-        $this->patchJson(route('profile.update'), ['email' => 'jan@example.com'])->assertOk();
+        $this->patchJson(route('profile.update'), ['email' => 'test@example.com'])->assertOk();
     }
 
     public function test_email_must_stay_unique(): void
     {
-        User::factory()->create(['email' => 'anna@example.com']);
+        User::factory()->create(['email' => 'other@example.com']);
         Sanctum::actingAs(User::factory()->create());
 
-        $this->patchJson(route('profile.update'), ['email' => 'anna@example.com'])
+        $this->patchJson(route('profile.update'), ['email' => 'other@example.com'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('email');
     }
