@@ -22,4 +22,27 @@ class ApiDocumentationTest extends TestCase
             ->assertOk()
             ->assertJsonPath('info.title', 'RTH');
     }
+
+    public function test_account_endpoints_are_documented(): void
+    {
+        $this->getJson('/docs/api.json')->assertJsonStructure([
+            'paths' => [
+                '/users' => ['post'],
+                '/tokens' => ['post'],
+                '/tokens/current' => ['delete'],
+                '/profile' => ['get', 'patch'],
+                '/profile/password' => ['put'],
+            ],
+        ]);
+    }
+
+    public function test_only_registration_and_login_work_without_token_in_documentation(): void
+    {
+        $this->getJson('/docs/api.json')
+            ->assertJsonPath('components.securitySchemes.http.scheme', 'bearer')
+            ->assertJsonPath('security.0.http', [])
+            ->assertJsonPath('paths./users.post.security', [])
+            ->assertJsonPath('paths./tokens.post.security', [])
+            ->assertJsonMissingPath('paths./profile.get.security');
+    }
 }
