@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ApiDocumentationTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_root_redirects_to_api_documentation(): void
     {
         $this->get('/')->assertRedirect('/docs/api');
@@ -34,6 +37,15 @@ class ApiDocumentationTest extends TestCase
                 '/profile/password' => ['put'],
             ],
         ]);
+    }
+
+    public function test_language_and_theme_are_documented_as_enums(): void
+    {
+        $this->getJson('/docs/api.json')
+            ->assertJsonPath('components.schemas.Locale.enum', ['pl', 'en'])
+            ->assertJsonPath('components.schemas.Theme.enum', ['light', 'dark'])
+            ->assertJsonPath('components.schemas.UserResource.properties.locale.$ref', '#/components/schemas/Locale')
+            ->assertJsonPath('components.schemas.UpdateProfileRequest.properties.theme.$ref', '#/components/schemas/Theme');
     }
 
     public function test_only_registration_and_login_work_without_token_in_documentation(): void

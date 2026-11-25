@@ -22,6 +22,8 @@ class TokenTest extends TestCase
             ->assertCreated()
             ->assertHeader('Location', route('tokens.destroy'))
             ->assertJsonPath('data.user.email', 'test@example.com')
+            ->assertJsonPath('data.user.locale', 'pl')
+            ->assertJsonPath('data.user.theme', 'light')
             ->assertJsonStructure(['data' => ['token']]);
 
         $this->assertDatabaseHas('personal_access_tokens', [
