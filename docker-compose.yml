@@ -29,6 +29,7 @@ services:
       - ./web:/app
     environment:
       VITE_USE_POLLING: "true"
+      VITE_API_URL: http://localhost:8000/api
 
   postgres:
     image: postgres:19-alpine

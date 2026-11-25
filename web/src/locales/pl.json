@@ -1,5 +1,69 @@
 {
-  "home": {
-    "tagline": "Twój dziennik podróży"
+  "common": {
+    "error": "Coś poszło nie tak. Spróbuj ponownie.",
+    "loading": "Ładowanie",
+    "comingSoon": "Ekran w przygotowaniu."
+  },
+  "nav": {
+    "openMenu": "Otwórz menu",
+    "trips": "Podróże",
+    "map": "Mapa",
+    "stats": "Statystyki",
+    "discover": "Odkrywaj",
+    "profile": "Profil",
+    "admin": "Administracja",
+    "dashboard": "Pulpit",
+    "users": "Konta",
+    "userTrips": "Podróże użytkowników",
+    "logout": "Wyloguj się"
+  },
+  "fields": {
+    "name": "Nazwa",
+    "email": "Adres e-mail",
+    "password": "Hasło",
+    "passwordConfirmation": "Powtórz hasło",
+    "passwordHint": "Co najmniej 8 znaków.",
+    "currentPassword": "Obecne hasło",
+    "newPassword": "Nowe hasło",
+    "newPasswordConfirmation": "Powtórz nowe hasło"
+  },
+  "login": {
+    "title": "Zaloguj się",
+    "description": "Wróć do swojego dziennika podróży.",
+    "submit": "Zaloguj się",
+    "noAccount": "Nie masz konta?",
+    "register": "Zarejestruj się"
+  },
+  "register": {
+    "title": "Załóż konto",
+    "description": "Zapisuj podróże i oglądaj je na mapie.",
+    "submit": "Załóż konto",
+    "hasAccount": "Masz już konto?",
+    "login": "Zaloguj się"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Twoje dane i widoczność profilu.",
+    "basics": "Dane podstawowe",
+    "save": "Zapisz zmiany",
+    "saved": "Zmiany zapisane.",
+    "visibility": {
+      "title": "Widoczność profilu",
+      "description": "Decydujesz, kto widzi Twoje podróże.",
+      "private": "Prywatny",
+      "privateHint": "Podróże, mapy i statystyki widzisz tylko Ty.",
+      "public": "Publiczny",
+      "publicHint": "Inni użytkownicy widzą Twoje podróże, mapy i statystyki, ale nie mogą ich zmieniać.",
+      "saved": "Widoczność profilu zapisana."
+    },
+    "password": {
+      "title": "Zmiana hasła",
+      "submit": "Zmień hasło",
+      "saved": "Hasło zmienione."
+    }
+  },
+  "trips": {
+    "title": "Podróże",
+    "description": "Twój dziennik podróży, od najnowszej."
   }
 }

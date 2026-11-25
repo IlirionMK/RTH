@@ -7,13 +7,13 @@ describe('i18n', () => {
 
   it('uses Polish by default', () => {
     expect(i18n.global.locale.value).toBe('pl')
-    expect(i18n.global.t('home.tagline')).toBe('Twój dziennik podróży')
+    expect(i18n.global.t('nav.trips')).toBe('Podróże')
   })
 
   it('switches the interface to English', () => {
     setLocale('en')
 
-    expect(i18n.global.t('home.tagline')).toBe('Your travel journal')
+    expect(i18n.global.t('nav.trips')).toBe('Trips')
   })
 
   it('sets the page language together with the interface language', () => {
