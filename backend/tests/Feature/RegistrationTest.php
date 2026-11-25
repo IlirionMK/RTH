@@ -43,6 +43,21 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'test@example.com', 'is_public' => false]);
     }
 
+    public function test_new_profile_uses_polish_and_light_theme(): void
+    {
+        $this->postJson(route('users.store'), [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'secret-password',
+            'password_confirmation' => 'secret-password',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.locale', 'pl')
+            ->assertJsonPath('data.theme', 'light');
+
+        $this->assertDatabaseHas('users', ['email' => 'test@example.com', 'locale' => 'pl', 'theme' => 'light']);
+    }
+
     public function test_registration_requires_name_email_and_password(): void
     {
         $this->postJson(route('users.store'))

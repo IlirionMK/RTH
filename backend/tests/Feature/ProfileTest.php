@@ -97,6 +97,47 @@ class ProfileTest extends TestCase
             ->assertJsonValidationErrors('is_public');
     }
 
+    public function test_profile_shows_language_and_theme(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->getJson(route('profile.show'))
+            ->assertOk()
+            ->assertJsonPath('data.locale', 'pl')
+            ->assertJsonPath('data.theme', 'light');
+    }
+
+    public function test_user_changes_language_and_theme(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $this->patchJson(route('profile.update'), ['locale' => 'en', 'theme' => 'dark'])
+            ->assertOk()
+            ->assertJsonPath('data.locale', 'en')
+            ->assertJsonPath('data.theme', 'dark');
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'locale' => 'en', 'theme' => 'dark']);
+    }
+
+    public function test_language_must_be_polish_or_english(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->patchJson(route('profile.update'), ['locale' => 'de'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('locale');
+    }
+
+    public function test_theme_must_be_light_or_dark(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->patchJson(route('profile.update'), ['theme' => 'system'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('theme');
+    }
+
     public function test_user_changes_password_with_current_password(): void
     {
         $user = User::factory()->create();

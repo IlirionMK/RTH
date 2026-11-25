@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Locale;
+use App\Enums\Theme;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,6 +33,8 @@ class UpdateProfileRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()),
             ],
             'is_public' => ['sometimes', 'boolean'],
+            'locale' => ['sometimes', Rule::enum(Locale::class)],
+            'theme' => ['sometimes', Rule::enum(Theme::class)],
         ];
     }
 }

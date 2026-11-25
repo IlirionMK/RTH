@@ -2,17 +2,18 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Locale;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
-    private const array LOCALES = ['pl', 'en'];
-
     public function handle(Request $request, Closure $next): Response
     {
-        app()->setLocale($request->getPreferredLanguage(self::LOCALES) ?? self::LOCALES[0]);
+        $locales = array_column(Locale::cases(), 'value');
+
+        app()->setLocale($request->getPreferredLanguage($locales) ?? Locale::Polish->value);
 
         return $next($request);
     }
