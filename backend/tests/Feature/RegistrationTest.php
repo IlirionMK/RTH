@@ -58,6 +58,21 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'test@example.com', 'locale' => 'pl', 'theme' => 'light']);
     }
 
+    public function test_new_user_has_user_role(): void
+    {
+        $this->postJson(route('users.store'), [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'secret-password',
+            'password_confirmation' => 'secret-password',
+            'role' => 'admin',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.role', 'user');
+
+        $this->assertDatabaseHas('users', ['email' => 'test@example.com', 'role' => 'user']);
+    }
+
     public function test_registration_requires_name_email_and_password(): void
     {
         $this->postJson(route('users.store'))

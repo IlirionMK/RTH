@@ -44,6 +44,7 @@ class ApiDocumentationTest extends TestCase
         $this->getJson('/docs/api.json')
             ->assertJsonPath('components.schemas.Locale.enum', ['pl', 'en'])
             ->assertJsonPath('components.schemas.Theme.enum', ['light', 'dark'])
+            ->assertJsonPath('components.schemas.Role.enum', ['user', 'admin'])
             ->assertJsonPath('components.schemas.UserResource.properties.locale.$ref', '#/components/schemas/Locale')
             ->assertJsonPath('components.schemas.UpdateProfileRequest.properties.theme.$ref', '#/components/schemas/Theme');
     }

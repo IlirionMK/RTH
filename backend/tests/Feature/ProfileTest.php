@@ -138,6 +138,18 @@ class ProfileTest extends TestCase
             ->assertJsonValidationErrors('theme');
     }
 
+    public function test_user_cannot_change_own_role(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $this->patchJson(route('profile.update'), ['role' => 'admin'])
+            ->assertOk()
+            ->assertJsonPath('data.role', 'user');
+
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'role' => 'user']);
+    }
+
     public function test_user_changes_password_with_current_password(): void
     {
         $user = User::factory()->create();
