@@ -1,0 +1,276 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{parskip}
+
+\geometry{
+  a4paper,
+  top=2.5cm,
+  bottom=2.5cm,
+  left=3cm,
+  right=2.5cm
+}
+
+\lstdefinestyle{bash}{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!8},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+
+  Collegium Witelona Uczelnia Państwowa\\
+  Wydział Nauk Technicznych i Ekonomicznych\\
+  Kierunek: Informatyka, semestr VII
+
+  \vspace{4cm}
+
+  {\Large\bfseries Sprawozdanie z pracy projektowej}\\[0.5em]
+  z projektu --- aplikacja turystyczna \textbf{,,RTH''}
+
+  \vspace{1cm}
+
+  Przedmiot: Projekt zespołowy
+
+  \vspace{4cm}
+
+  \begin{flushright}
+    \textbf{Wykonali:}\\[0.5em]
+    Mykyta Klymenko\\
+    nr indeksu 44496\\[0.5em]
+    \textit{[imię i nazwisko]}\\
+    nr indeksu \textit{[numer]}
+  \end{flushright}
+
+  \vfill
+
+  Legnica 2027
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Opis przedmiotu zamówienia}
+
+Opis dostarczony przez prowadzącego.
+
+\subsection{Cel projektu}
+
+Przedmiotem zamówienia jest stworzenie aplikacji turystycznej, która umożliwi użytkownikom
+dokumentowanie odbytych podróży, prezentowanie ich na interaktywnej mapie oraz przeglądanie
+statystyk podróżniczych.
+
+Chcielibyśmy, aby aplikacja pełniła funkcję osobistego dziennika podróży, w którym użytkownik może
+zobaczyć, gdzie był, jakimi środkami transportu podróżował i jakie kraje odwiedził.
+
+\subsection{Wymagane funkcjonalności}
+
+\subsubsection*{Konta użytkowników}
+
+\begin{itemize}
+  \item Rejestracja, logowanie i wylogowywanie.
+  \item Możliwość edycji podstawowych danych profilu.
+  \item Ustawienie profilu jako publiczny lub prywatny.
+  \item Możliwość przeglądania podróży innych użytkowników, jeśli ich profile są publiczne.
+\end{itemize}
+
+\subsubsection*{Zarządzanie podróżami}
+
+\begin{itemize}
+  \item Dodawanie, edycja i usuwanie podróży.
+  \item Każda podróż powinna mieć nazwę, datę lub zakres dat oraz opcjonalny opis.
+  \item Podróż może składać się z dowolnej liczby punktów i odcinków, pokonywanych różnymi
+        środkami transportu.
+  \item Użytkownik powinien mieć możliwość określenia kolejności odwiedzanych miejsc i wyboru
+        środka transportu dla każdego odcinka.
+\end{itemize}
+
+Przykładowa podróż:
+
+\begin{enumerate}
+  \item Legnica $\rightarrow$ Berlin (samochód)
+  \item Berlin $\rightarrow$ Majorka (samolot)
+  \item Zwiedzanie Majorki (kilka punktów) (samochód)
+  \item Majorka $\rightarrow$ Berlin (samolot)
+  \item Berlin $\rightarrow$ Legnica (samochód)
+\end{enumerate}
+
+\subsubsection*{Obsługiwane środki transportu}
+
+\begin{itemize}
+  \item Samochód --- trasa wyznaczana po rzeczywistej sieci dróg.
+  \item Samolot --- połączenie przedstawione linią prostą (choć na mapie powinno przedstawić się
+        jako łuk).
+  \item Pociąg --- połączenie przedstawione linią prostą.
+  \item Inne --- uproszczone połączenie między punktami.
+\end{itemize}
+
+\subsubsection*{Interaktywna mapa}
+
+\begin{itemize}
+  \item Wyświetlanie pojedynczej podróży na mapie wraz z punktami i odcinkami.
+  \item Rozróżnianie środków transportu za pomocą kolorów, ikon lub stylów linii.
+  \item Możliwość wyświetlenia wszystkich podróży użytkownika na jednej mapie.
+  \item Automatyczne rozpoznawanie i oznaczanie odwiedzonych państw na podstawie zapisanych
+        podróży.
+  \item Możliwość przybliżania mapy i przeglądania szczegółów tras.
+\end{itemize}
+
+\subsubsection*{Statystyki podróżnicze}
+
+Aplikacja powinna generować statystyki zarówno dla całej historii podróży użytkownika, jak i dla
+wybranego roku kalendarzowego. Interesują nas przede wszystkim:
+
+\begin{itemize}
+  \item Liczba odbytych podróży.
+  \item Liczba odwiedzonych państw.
+  \item Lista odwiedzonych państw oraz ich wyróżnienie na mapie.
+  \item Łączna liczba przebytych kilometrów.
+  \item Dystans pokonany poszczególnymi środkami transportu.
+  \item Liczba odwiedzonych miejsc.
+\end{itemize}
+
+\subsection{Oczekiwany rezultat}
+
+Oczekujemy działającej aplikacji z czytelnym, intuicyjnym interfejsem, pozwalającej użytkownikowi w
+prosty sposób dodawać podróże i analizować swoją historię podróżniczą.
+
+Zależy nam przede wszystkim na poprawnym działaniu podstawowych funkcji, sensownej prezentacji tras
+na mapie oraz estetycznej i wygodnej obsłudze aplikacji.
+
+\subsection{Uwagi dodatkowe}
+
+Oczekujemy wykorzystania zewnętrznych API i gotowych bibliotek do obsługi map, geokodowania oraz
+wyznaczania tras.
+
+Nie oczekujemy systemu nawigacji GPS ani idealnego odwzorowania rzeczywiście przebytej drogi. Trasy
+powinny być jednak przedstawiane w sposób wiarygodny i zgodny z wybranym środkiem transportu.
+
+Jesteśmy również otwarci na dodatkowe funkcjonalności zaproponowane przez wykonawców, o ile nie
+odbędzie się to kosztem realizacji podstawowych wymagań.
+
+Najważniejsze z perspektywy zamawiającego: chcemy móc po kilku latach korzystania z aplikacji
+otworzyć mapę i zobaczyć wszystkie swoje podróże, odwiedzone kraje oraz ciekawe statystyki
+pokazujące, jak podróżowaliśmy na przestrzeni lat.
+
+\newpage
+
+\section{Opis technologiczny zaproponowanego rozwiązania}
+
+\subsection{Architektura}
+
+System składa się z trzech części, które komunikują się przez jedno REST API:
+
+\begin{itemize}
+  \item \textbf{API} (\texttt{backend/}) --- jedyne miejsce logiki biznesowej i dostępu do bazy danych;
+  \item \textbf{panel administracyjny} (\texttt{web/}) --- aplikacja SPA do zarządzania danymi;
+  \item \textbf{aplikacja mobilna} (\texttt{mobile/}) --- aplikacja dla użytkowników końcowych.
+\end{itemize}
+
+Wszystkie części znajdują się w jednym repozytorium. Środowisko uruchomieniowe opisuje plik
+\texttt{docker-compose.yml}.
+
+\subsection{Stos technologiczny}
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+  \toprule
+  \textbf{Warstwa} & \textbf{Technologia} \\
+  \midrule
+  API & PHP 8.6, Laravel 13, Laravel Sanctum \\
+  Dokumentacja API & OpenAPI generowane przez Scramble \\
+  Panel administracyjny & Vue 3, TypeScript, Vite, Pinia, Vue Router, Tailwind CSS 4, shadcn-vue \\
+  Aplikacja mobilna & \textit{[do uzupełnienia]} \\
+  Baza danych & PostgreSQL 19 \\
+  Serwer HTTP & nginx 1.31 \\
+  Środowisko & Docker Compose, Node.js 26 \\
+  CI & GitHub Actions \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Kontrola jakości}
+
+Każdy pull request przechodzi w GitHub Actions te same kontrole, które zespół uruchamia lokalnie:
+
+\begin{itemize}
+  \item API: formatowanie kodu (Pint), analiza statyczna (Larastan), testy (PHPUnit na PostgreSQL);
+  \item panel: lintery (oxlint, ESLint), kontrola typów (vue-tsc), testy (Vitest), build produkcyjny;
+  \item tytuł pull requesta zawiera numer zadania z GitHub Issues.
+\end{itemize}
+
+\newpage
+
+\section{Podział obowiązków i odpowiedzialności w zespole}
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+  \toprule
+  \textbf{Osoba} & \textbf{Zakres odpowiedzialności} \\
+  \midrule
+  Mykyta Klymenko & API, panel administracyjny \\
+  \textit{[imię i nazwisko]} & panel administracyjny, aplikacja mobilna \\
+  \bottomrule
+\end{tabularx}
+
+\newpage
+
+\section{Zadania i ich czasochłonność}
+
+Zadania są prowadzone w GitHub Issues. Tabela zawiera czas szacowany przy planowaniu i czas
+rzeczywisty po zamknięciu zadania.
+
+\begin{longtable}{@{}p{1cm}p{6.4cm}p{3cm}rr@{}}
+  \toprule
+  \textbf{Nr} & \textbf{Zadanie} & \textbf{Osoba} & \textbf{Plan [h]} & \textbf{Fakt [h]} \\
+  \midrule
+  \endhead
+  \textit{[\#]} & \textit{[do uzupełnienia]} & & & \\
+  \bottomrule
+\end{longtable}
+
+\newpage
+
+\section{Instrukcja uruchomienia systemu}
+
+\subsection{Uruchomienie lokalne}
+
+Wymagany jest Docker z Docker Compose.
+
+\begin{lstlisting}[style=bash]
+cp backend/.env.example backend/.env
+docker compose up -d --build
+docker compose exec php composer setup
+\end{lstlisting}
+
+Kontener \texttt{web} sam instaluje zależności przy starcie.
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+  \toprule
+  \textbf{Serwis} & \textbf{Adres} \\
+  \midrule
+  API & \url{http://localhost:8000/api} \\
+  Dokumentacja OpenAPI & \url{http://localhost:8000/docs/api} \\
+  Panel administracyjny & \url{http://localhost:5173} \\
+  Mailpit & \url{http://localhost:8025} \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Uruchomienie zdalne}
+
+\textit{[do uzupełnienia po wdrożeniu]}
+
+\end{document}

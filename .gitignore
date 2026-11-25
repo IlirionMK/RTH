@@ -10,3 +10,6 @@ docs/**/*.toc
 docs/**/*.synctex.gz
 docs/**/*.fdb_latexmk
 docs/**/*.fls
+
+# Local materials: mockup exports and past reports, not for the repository
+docs/materials/

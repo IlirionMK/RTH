@@ -1,0 +1,21 @@
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check issue number in title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ ! "$TITLE" =~ ^#[0-9]+\ [^[:space:]] ]]; then
+            echo "::error::Tytuł PR musi zaczynać się od numeru zadania, np. '#12 Logowanie administratora'."
+            exit 1
+          fi
