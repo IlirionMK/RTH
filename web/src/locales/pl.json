@@ -39,7 +39,12 @@
     "description": "Zapisuj podróże i oglądaj je na mapie.",
     "submit": "Załóż konto",
     "hasAccount": "Masz już konto?",
-    "login": "Zaloguj się"
+    "login": "Zaloguj się",
+    "sent": {
+      "title": "Sprawdź skrzynkę",
+      "description": "Wysłaliśmy wiadomość na adres {email}. Kliknij link w niej, aby aktywować konto. Link jest ważny 60 minut.",
+      "login": "Wróć do logowania"
+    }
   },
   "profile": {
     "title": "Profil",
@@ -60,10 +65,46 @@
       "title": "Zmiana hasła",
       "submit": "Zmień hasło",
       "saved": "Hasło zmienione."
-    }
+    },
+    "emailPending": "Nowy adres {email} czeka na potwierdzenie. Sprawdź skrzynkę.",
+    "emailSent": "Wysłaliśmy link na nowy adres."
   },
   "trips": {
     "title": "Podróże",
     "description": "Twój dziennik podróży, od najnowszej."
+  },
+  "emailConfirmation": {
+    "loading": "Potwierdzamy adres e-mail",
+    "verification": {
+      "done": {
+        "title": "Adres potwierdzony",
+        "description": "Możesz się teraz zalogować."
+      },
+      "invalid": {
+        "title": "Link nie działa",
+        "description": "Link jest nieprawidłowy albo wygasł. Zaloguj się, a wyślemy nowy."
+      }
+    },
+    "change": {
+      "done": {
+        "title": "Nowy adres zapisany",
+        "description": "Od teraz logujesz się nowym adresem e-mail."
+      },
+      "invalid": {
+        "title": "Link nie działa",
+        "description": "Link jest nieprawidłowy albo wygasł. Zmień adres w profilu jeszcze raz."
+      },
+      "taken": {
+        "title": "Adres jest zajęty",
+        "description": "Ten adres należy już do innego konta. Wybierz inny w profilu."
+      }
+    },
+    "failed": {
+      "title": "Coś poszło nie tak",
+      "description": "Otwórz link jeszcze raz."
+    },
+    "toLogin": "Przejdź do logowania",
+    "toProfile": "Przejdź do profilu",
+    "toTrips": "Przejdź do podróży"
   }
 }

@@ -39,7 +39,12 @@
     "description": "Save your trips and see them on the map.",
     "submit": "Create account",
     "hasAccount": "Already have an account?",
-    "login": "Log in"
+    "login": "Log in",
+    "sent": {
+      "title": "Check your inbox",
+      "description": "We sent a message to {email}. Click the link in it to activate your account. The link is valid for 60 minutes.",
+      "login": "Back to log in"
+    }
   },
   "profile": {
     "title": "Profile",
@@ -60,10 +65,46 @@
       "title": "Change password",
       "submit": "Change password",
       "saved": "Password changed."
-    }
+    },
+    "emailPending": "The new address {email} is waiting for confirmation. Check your inbox.",
+    "emailSent": "We sent a link to the new address."
   },
   "trips": {
     "title": "Trips",
     "description": "Your travel journal, newest first."
+  },
+  "emailConfirmation": {
+    "loading": "Confirming your e-mail address",
+    "verification": {
+      "done": {
+        "title": "Address confirmed",
+        "description": "You can log in now."
+      },
+      "invalid": {
+        "title": "The link does not work",
+        "description": "The link is invalid or has expired. Log in and we will send a new one."
+      }
+    },
+    "change": {
+      "done": {
+        "title": "New address saved",
+        "description": "From now on you log in with the new e-mail address."
+      },
+      "invalid": {
+        "title": "The link does not work",
+        "description": "The link is invalid or has expired. Change the address in your profile again."
+      },
+      "taken": {
+        "title": "The address is taken",
+        "description": "This address already belongs to another account. Choose a different one in your profile."
+      }
+    },
+    "failed": {
+      "title": "Something went wrong",
+      "description": "Open the link again."
+    },
+    "toLogin": "Go to log in",
+    "toProfile": "Go to profile",
+    "toTrips": "Go to trips"
   }
 }

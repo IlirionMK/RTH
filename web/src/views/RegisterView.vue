@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { MailCheck } from '@lucide/vue'
 import { reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 
 import TextField from '@/components/TextField.vue'
@@ -13,12 +13,12 @@ import { type FieldErrors, validationErrors } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
-const router = useRouter()
 const { t } = useI18n()
 
 const form = reactive({ name: '', email: '', password: '', password_confirmation: '' })
 const errors = ref<FieldErrors>({})
 const submitting = ref(false)
+const sentTo = ref<string | null>(null)
 
 async function submit(): Promise<void> {
   submitting.value = true
@@ -26,7 +26,7 @@ async function submit(): Promise<void> {
 
   try {
     await auth.register(form)
-    await router.push({ name: 'trips.index' })
+    sentTo.value = form.email
   } catch (error) {
     const fieldErrors = validationErrors(error)
 
@@ -42,7 +42,19 @@ async function submit(): Promise<void> {
 </script>
 
 <template>
-  <Card>
+  <Card v-if="sentTo">
+    <CardHeader>
+      <MailCheck class="mb-2 size-8 text-muted-foreground" aria-hidden="true" />
+      <CardTitle class="text-xl">{{ $t('register.sent.title') }}</CardTitle>
+      <CardDescription class="text-pretty">{{ $t('register.sent.description', { email: sentTo }) }}</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <Button as-child variant="outline" class="w-full">
+        <RouterLink :to="{ name: 'login' }">{{ $t('register.sent.login') }}</RouterLink>
+      </Button>
+    </CardContent>
+  </Card>
+  <Card v-else>
     <CardHeader>
       <CardTitle class="text-xl">{{ $t('register.title') }}</CardTitle>
       <CardDescription>{{ $t('register.description') }}</CardDescription>
@@ -90,7 +102,7 @@ async function submit(): Promise<void> {
       </form>
     </CardContent>
   </Card>
-  <p class="text-center text-sm text-muted-foreground">
+  <p v-if="!sentTo" class="text-center text-sm text-muted-foreground">
     {{ $t('register.hasAccount') }}
     <RouterLink :to="{ name: 'login' }" class="font-medium text-foreground underline underline-offset-4">
       {{ $t('register.login') }}

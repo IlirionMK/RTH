@@ -7,6 +7,7 @@ export interface User {
   id: number
   name: string
   email: string
+  pending_email: string | null
   role: Role
   is_public: boolean
   locale: Locale

@@ -28,7 +28,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function register(payload: RegisterPayload): Promise<void> {
     await createUser(payload)
-    await login({ email: payload.email, password: payload.password })
   }
 
   async function logout(): Promise<void> {

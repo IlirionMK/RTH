@@ -18,10 +18,8 @@ export interface NewToken {
   user: User
 }
 
-export async function register(payload: RegisterPayload): Promise<User> {
-  const response = await api.post<{ data: User }>('/users', payload)
-
-  return response.data.data
+export async function register(payload: RegisterPayload): Promise<void> {
+  await api.post('/users', payload)
 }
 
 export async function createToken(payload: LoginPayload): Promise<NewToken> {

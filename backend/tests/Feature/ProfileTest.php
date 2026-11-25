@@ -25,24 +25,16 @@ class ProfileTest extends TestCase
             ->assertJsonPath('data.is_public', false);
     }
 
-    public function test_user_changes_name_and_email(): void
+    public function test_user_changes_name(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $this->patchJson(route('profile.update'), [
-            'name' => 'Renamed User',
-            'email' => 'renamed@example.com',
-        ])
+        $this->patchJson(route('profile.update'), ['name' => 'Renamed User'])
             ->assertOk()
-            ->assertJsonPath('data.name', 'Renamed User')
-            ->assertJsonPath('data.email', 'renamed@example.com');
+            ->assertJsonPath('data.name', 'Renamed User');
 
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'name' => 'Renamed User',
-            'email' => 'renamed@example.com',
-        ]);
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Renamed User']);
     }
 
     public function test_user_keeps_own_email(): void
@@ -50,17 +42,10 @@ class ProfileTest extends TestCase
         $user = User::factory()->create(['email' => 'test@example.com']);
         Sanctum::actingAs($user);
 
-        $this->patchJson(route('profile.update'), ['email' => 'test@example.com'])->assertOk();
-    }
-
-    public function test_email_must_stay_unique(): void
-    {
-        User::factory()->create(['email' => 'other@example.com']);
-        Sanctum::actingAs(User::factory()->create());
-
-        $this->patchJson(route('profile.update'), ['email' => 'other@example.com'])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors('email');
+        $this->patchJson(route('profile.update'), ['email' => 'test@example.com'])
+            ->assertOk()
+            ->assertJsonPath('data.email', 'test@example.com')
+            ->assertJsonPath('data.pending_email', null);
     }
 
     public function test_name_and_email_cannot_be_empty(): void

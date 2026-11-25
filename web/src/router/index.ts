@@ -4,6 +4,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import { token } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
+import EmailConfirmationView from '@/views/EmailConfirmationView.vue'
 import LoginView from '@/views/LoginView.vue'
 import PlaceholderView from '@/views/PlaceholderView.vue'
 import ProfileView from '@/views/ProfileView.vue'
@@ -54,6 +55,24 @@ const router = createRouter({
       children: [
         { path: 'login', name: 'login', component: LoginView },
         { path: 'register', name: 'register', component: RegisterView },
+      ],
+    },
+    {
+      path: '/',
+      component: AuthLayout,
+      children: [
+        {
+          path: 'email-verifications/:user/:hash',
+          name: 'email-verification',
+          component: EmailConfirmationView,
+          props: { kind: 'verification' },
+        },
+        {
+          path: 'email-changes/:user/:hash',
+          name: 'email-change',
+          component: EmailConfirmationView,
+          props: { kind: 'change' },
+        },
       ],
     },
   ],

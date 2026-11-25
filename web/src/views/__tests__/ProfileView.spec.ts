@@ -15,6 +15,7 @@ const user: User = {
   id: 1,
   name: 'Test User',
   email: 'test@example.com',
+  pending_email: null,
   role: 'user',
   is_public: false,
   locale: 'pl',
@@ -44,7 +45,7 @@ describe('ProfileView', () => {
     expect((wrapper.find('#email').element as HTMLInputElement).value).toBe('test@example.com')
   })
 
-  it('saves the new name and e-mail', async () => {
+  it('saves the new name without touching the e-mail', async () => {
     vi.mocked(updateProfile).mockResolvedValue({ ...user, name: 'Renamed User' })
     const wrapper = mountProfile()
 
@@ -52,8 +53,21 @@ describe('ProfileView', () => {
     await wrapper.findAll('form')[0]?.trigger('submit')
     await flushPromises()
 
-    expect(updateProfile).toHaveBeenCalledWith({ name: 'Renamed User', email: 'test@example.com' })
+    expect(updateProfile).toHaveBeenCalledWith({ name: 'Renamed User' })
     expect(useAuthStore().user?.name).toBe('Renamed User')
+  })
+
+  it('keeps the current e-mail until the new one is confirmed', async () => {
+    vi.mocked(updateProfile).mockResolvedValue({ ...user, pending_email: 'renamed@example.com' })
+    const wrapper = mountProfile()
+
+    await wrapper.find('#email').setValue('renamed@example.com')
+    await wrapper.findAll('form')[0]?.trigger('submit')
+    await flushPromises()
+
+    expect(updateProfile).toHaveBeenCalledWith({ name: 'Test User', email: 'renamed@example.com' })
+    expect((wrapper.find('#email').element as HTMLInputElement).value).toBe('test@example.com')
+    expect(wrapper.find('#email-description').text()).toContain('renamed@example.com')
   })
 
   it('makes the profile public', async () => {

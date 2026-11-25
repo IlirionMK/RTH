@@ -16,6 +16,7 @@ const user: User = {
   id: 1,
   name: 'Test User',
   email: 'test@example.com',
+  pending_email: null,
   role: 'user',
   is_public: false,
   locale: 'pl',

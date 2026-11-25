@@ -14,6 +14,7 @@ const user: User = {
   id: 1,
   name: 'Test User',
   email: 'test@example.com',
+  pending_email: null,
   role: 'user',
   is_public: false,
   locale: 'pl',
@@ -42,8 +43,8 @@ describe('auth store', () => {
     expect(auth.isAdmin).toBe(false)
   })
 
-  it('logs in right after registration', async () => {
-    vi.mocked(register).mockResolvedValue(user)
+  it('stays logged out after registration until the e-mail is confirmed', async () => {
+    vi.mocked(register).mockResolvedValue()
     const auth = useAuthStore()
 
     await auth.register({
@@ -53,8 +54,9 @@ describe('auth store', () => {
       password_confirmation: 'secret-password',
     })
 
-    expect(createToken).toHaveBeenCalledWith({ email: 'test@example.com', password: 'secret-password' })
-    expect(auth.isAuthenticated).toBe(true)
+    expect(register).toHaveBeenCalled()
+    expect(createToken).not.toHaveBeenCalled()
+    expect(auth.isAuthenticated).toBe(false)
   })
 
   it('logs out locally even when the API request fails', async () => {

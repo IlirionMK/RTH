@@ -12,6 +12,7 @@ const user: User = {
   id: 1,
   name: 'Test User',
   email: 'test@example.com',
+  pending_email: null,
   role: 'user',
   is_public: false,
   locale: 'pl',
@@ -61,6 +62,19 @@ describe('router', () => {
     await router.push({ name: 'admin.users' })
 
     expect(router.currentRoute.value.name).toBe('admin.users')
+  })
+
+  it('opens e-mail confirmation links for guests and logged-in users', async () => {
+    await router.push({ name: 'email-verification', params: { user: '1', hash: 'test-hash' } })
+
+    expect(router.currentRoute.value.name).toBe('email-verification')
+
+    vi.mocked(getProfile).mockResolvedValue(user)
+    token.value = 'test-token'
+
+    await router.push({ name: 'email-change', params: { user: '1', hash: 'test-hash' } })
+
+    expect(router.currentRoute.value.name).toBe('email-change')
   })
 
   it('logs out when the profile cannot be loaded', async () => {

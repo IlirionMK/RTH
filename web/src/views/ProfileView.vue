@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Globe, Lock } from '@lucide/vue'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 
@@ -32,13 +32,20 @@ const basics = reactive({ name: auth.user?.name ?? '', email: auth.user?.email ?
 const basicsErrors = ref<FieldErrors>({})
 const savingBasics = ref(false)
 
+const pendingEmail = computed(() =>
+  auth.user?.pending_email ? t('profile.emailPending', { email: auth.user.pending_email }) : undefined,
+)
+
 async function saveBasics(): Promise<void> {
   savingBasics.value = true
   basicsErrors.value = {}
+  const emailChanged = basics.email !== auth.user?.email
 
   try {
-    auth.setUser(await updateProfile(basics))
-    toast.success(t('profile.saved'))
+    const user = await updateProfile(emailChanged ? { ...basics } : { name: basics.name })
+    auth.setUser(user)
+    basics.email = user.email
+    toast.success(t(emailChanged && user.pending_email ? 'profile.emailSent' : 'profile.saved'))
   } catch (error) {
     showError(error, basicsErrors)
   } finally {
@@ -108,6 +115,7 @@ async function savePassword(): Promise<void> {
               type="email"
               autocomplete="email"
               :label="$t('fields.email')"
+              :description="pendingEmail"
               :error="basicsErrors.email"
             />
           </div>
