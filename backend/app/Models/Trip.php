@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Database\Factories\TripFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,6 +40,17 @@ class Trip extends Model
     {
         return $this->hasMany(Segment::class)
             ->orderBy(Point::query()->select('position')->whereColumn('points.id', 'segments.from_point_id'));
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function startedIn(Builder $query, ?int $year): void
+    {
+        if ($year !== null) {
+            $query->whereBetween('starts_on', ["{$year}-01-01", "{$year}-12-31"]);
+        }
     }
 
     /**

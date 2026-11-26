@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['from_point_id', 'to_point_id', 'transport', 'geometry', 'distance_km', 'is_approximate'])]
+#[Fillable(['from_point_id', 'to_point_id', 'transport', 'geometry', 'map_geometry', 'distance_km', 'is_approximate'])]
 class Segment extends Model
 {
     /** @use HasFactory<SegmentFactory> */
@@ -52,6 +52,7 @@ class Segment extends Model
         return [
             'transport' => Transport::class,
             'geometry' => 'array',
+            'map_geometry' => 'array',
             'distance_km' => 'float',
             'is_approximate' => 'boolean',
         ];

@@ -28,6 +28,7 @@ class SegmentFactory extends Factory
                 'position' => 2,
             ]),
             'geometry' => ['type' => 'LineString', 'coordinates' => [[13.405, 52.52], [2.3522, 48.8566]]],
+            'map_geometry' => ['type' => 'LineString', 'coordinates' => [[13.405, 52.52], [2.3522, 48.8566]]],
             'distance_km' => 877.5,
         ];
     }
