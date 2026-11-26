@@ -76,6 +76,8 @@
     "loadError": "Nie udało się wczytać podróży.",
     "retry": "Spróbuj ponownie",
     "more": "Pokaż więcej",
+    "map": "Mapa",
+    "openMap": "Mapa podróży {name}",
     "countries": "Państwa",
     "transports": "Środki transportu",
     "empty": {
@@ -83,6 +85,33 @@
       "description": "Dodaj pierwszą podróż, a potem ułóż jej trasę.",
       "action": "Dodaj podróż"
     }
+  },
+  "map": {
+    "title": "Mapa podróży",
+    "summary": "Podróże: {trips} · Państwa: {countries}",
+    "region": "Mapa wszystkich podróży",
+    "tripRegion": "Mapa podróży {name}",
+    "year": "Rok",
+    "all": "Wszystkie",
+    "noToken": "Mapa jest niedostępna: brak klucza Mapbox (VITE_MAPBOX_TOKEN).",
+    "loadError": "Nie udało się wczytać mapy.",
+    "selectedTrip": "Wybrana podróż",
+    "openTripMap": "Otwórz mapę podróży",
+    "pickLine": "Wybierz trasę na mapie, aby zobaczyć, do której podróży należy.",
+    "pick": "Wybierz punkt albo odcinek na mapie lub z listy.",
+    "empty": "Brak podróży w tym okresie.",
+    "segment": "Odcinek {index} z {total}",
+    "segments": "Odcinki",
+    "noSegments": "Dodaj co najmniej dwa miejsca, aby zobaczyć odcinki.",
+    "transport": "Środek transportu",
+    "distance": "Dystans",
+    "approximate": "Nie znaleziono drogi, odcinek pokazano w linii prostej.",
+    "countries": "Odwiedzone państwa · {count}",
+    "noCountries": "Brak odwiedzonych państw.",
+    "legend": "Legenda",
+    "visited": "Odwiedzone państwo",
+    "zoomIn": "Przybliż",
+    "zoomOut": "Oddal"
   },
   "transport": {
     "car": "Samochód",
@@ -92,6 +121,8 @@
   },
   "trip": {
     "back": "Podróże",
+    "map": "Mapa",
+    "edit": "Edytuj",
     "newTitle": "Nowa podróż",
     "newDescription": "Nazwij podróż i podaj daty. Miejsca dodasz po zapisaniu.",
     "editDescription": "Edycja podróży",

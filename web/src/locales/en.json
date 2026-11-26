@@ -76,6 +76,8 @@
     "loadError": "We could not load your trips.",
     "retry": "Try again",
     "more": "Show more",
+    "map": "Map",
+    "openMap": "Map of the trip {name}",
     "countries": "Countries",
     "transports": "Transport",
     "empty": {
@@ -83,6 +85,33 @@
       "description": "Add your first trip, then plan its route.",
       "action": "Add a trip"
     }
+  },
+  "map": {
+    "title": "Travel map",
+    "summary": "Trips: {trips} · Countries: {countries}",
+    "region": "Map of all trips",
+    "tripRegion": "Map of the trip {name}",
+    "year": "Year",
+    "all": "All",
+    "noToken": "The map is not available: the Mapbox key is missing (VITE_MAPBOX_TOKEN).",
+    "loadError": "We could not load the map.",
+    "selectedTrip": "Selected trip",
+    "openTripMap": "Open the trip map",
+    "pickLine": "Choose a route on the map to see which trip it belongs to.",
+    "pick": "Choose a point or a segment on the map or in the list.",
+    "empty": "No trips in this period.",
+    "segment": "Segment {index} of {total}",
+    "segments": "Segments",
+    "noSegments": "Add at least two places to see segments.",
+    "transport": "Transport",
+    "distance": "Distance",
+    "approximate": "No road was found, so the segment is a straight line.",
+    "countries": "Visited countries · {count}",
+    "noCountries": "No visited countries.",
+    "legend": "Legend",
+    "visited": "Visited country",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
   },
   "transport": {
     "car": "Car",
@@ -92,6 +121,8 @@
   },
   "trip": {
     "back": "Trips",
+    "map": "Map",
+    "edit": "Edit",
     "newTitle": "New trip",
     "newDescription": "Name the trip and give its dates. You add places after saving.",
     "editDescription": "Edit trip",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Trash2 } from '@lucide/vue'
+import { ArrowLeft, MapIcon, Trash2 } from '@lucide/vue'
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -191,10 +191,18 @@ async function destroy(): Promise<void> {
             {{ $t(trip ? 'trip.editDescription' : 'trip.newDescription') }}
           </p>
         </header>
-        <Button v-if="trip" variant="destructive" @click="deleteOpen = true">
-          <Trash2 aria-hidden="true" />
-          {{ $t('trip.delete.open') }}
-        </Button>
+        <div v-if="trip" class="flex flex-wrap gap-2">
+          <Button variant="outline" as-child>
+            <RouterLink :to="{ name: 'trips.map', params: { id: trip.id } }">
+              <MapIcon aria-hidden="true" />
+              {{ $t('trip.map') }}
+            </RouterLink>
+          </Button>
+          <Button variant="destructive" @click="deleteOpen = true">
+            <Trash2 aria-hidden="true" />
+            {{ $t('trip.delete.open') }}
+          </Button>
+        </div>
       </div>
     </div>
 
