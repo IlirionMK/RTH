@@ -35,7 +35,7 @@ class CreateAdmin extends Command
             return self::FAILURE;
         }
 
-        $admin = User::forceCreate([...$validator->validated(), 'role' => Role::Admin]);
+        $admin = User::forceCreate([...$validator->validated(), 'role' => Role::Admin, 'email_verified_at' => now()]);
 
         $this->info("Administrator {$admin->email} created.");
 

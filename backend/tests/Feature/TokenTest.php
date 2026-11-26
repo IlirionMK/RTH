@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class TokenTest extends TestCase
@@ -72,6 +74,39 @@ class TokenTest extends TestCase
         $this->assertSame(__('auth.failed'), $wrongPassword);
         $this->assertSame($wrongPassword, $unknownEmail);
         $this->assertDatabaseCount('personal_access_tokens', 0);
+    }
+
+    public function test_unverified_user_gets_a_new_link_instead_of_a_token(): void
+    {
+        Notification::fake();
+        $user = User::factory()->unverified()->create(['email' => 'test@example.com']);
+
+        $this->postJson(route('tokens.store'), [
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'device_name' => 'phone',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.email.0', __('Confirm your email address. We have sent you a new link.'));
+
+        $this->assertDatabaseCount('personal_access_tokens', 0);
+        Notification::assertSentTo($user, VerifyEmail::class);
+    }
+
+    public function test_unverified_user_with_wrong_password_gets_no_link(): void
+    {
+        Notification::fake();
+        User::factory()->unverified()->create(['email' => 'test@example.com']);
+
+        $this->postJson(route('tokens.store'), [
+            'email' => 'test@example.com',
+            'password' => 'wrong-password',
+            'device_name' => 'phone',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.email.0', __('auth.failed'));
+
+        Notification::assertNothingSent();
     }
 
     public function test_login_requires_email_password_and_device_name(): void

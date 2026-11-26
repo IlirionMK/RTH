@@ -25,6 +25,7 @@ class CreateAdminCommandTest extends TestCase
 
         $admin = User::where('email', 'admin@example.com')->firstOrFail();
         $this->assertTrue(Hash::check('admin-password-1', $admin->password));
+        $this->assertTrue($admin->hasVerifiedEmail());
     }
 
     public function test_command_rejects_taken_email(): void

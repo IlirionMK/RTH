@@ -17,6 +17,12 @@ class CreateToken
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
+        if (! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+
+            throw ValidationException::withMessages(['email' => __('Confirm your email address. We have sent you a new link.')]);
+        }
+
         return $user->createToken($deviceName);
     }
 }

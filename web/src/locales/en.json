@@ -1,5 +1,110 @@
 {
-  "home": {
-    "tagline": "Your travel journal"
+  "common": {
+    "error": "Something went wrong. Try again.",
+    "loading": "Loading",
+    "comingSoon": "This screen is coming soon."
+  },
+  "nav": {
+    "openMenu": "Open menu",
+    "trips": "Trips",
+    "map": "Map",
+    "stats": "Statistics",
+    "discover": "Discover",
+    "profile": "Profile",
+    "admin": "Administration",
+    "dashboard": "Dashboard",
+    "users": "Accounts",
+    "userTrips": "User trips",
+    "logout": "Log out"
+  },
+  "fields": {
+    "name": "Name",
+    "email": "E-mail address",
+    "password": "Password",
+    "passwordConfirmation": "Repeat password",
+    "passwordHint": "At least 8 characters.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "newPasswordConfirmation": "Repeat new password"
+  },
+  "login": {
+    "title": "Log in",
+    "description": "Return to your travel journal.",
+    "submit": "Log in",
+    "noAccount": "No account yet?",
+    "register": "Sign up"
+  },
+  "register": {
+    "title": "Create an account",
+    "description": "Save your trips and see them on the map.",
+    "submit": "Create account",
+    "hasAccount": "Already have an account?",
+    "login": "Log in",
+    "sent": {
+      "title": "Check your inbox",
+      "description": "We sent a message to {email}. Click the link in it to activate your account. The link is valid for 60 minutes.",
+      "login": "Back to log in"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Your details and profile visibility.",
+    "basics": "Basic details",
+    "save": "Save changes",
+    "saved": "Changes saved.",
+    "visibility": {
+      "title": "Profile visibility",
+      "description": "You decide who sees your trips.",
+      "private": "Private",
+      "privateHint": "Only you see your trips, maps and statistics.",
+      "public": "Public",
+      "publicHint": "Other users see your trips, maps and statistics, but cannot change them.",
+      "saved": "Profile visibility saved."
+    },
+    "password": {
+      "title": "Change password",
+      "submit": "Change password",
+      "saved": "Password changed."
+    },
+    "emailPending": "The new address {email} is waiting for confirmation. Check your inbox.",
+    "emailSent": "We sent a link to the new address."
+  },
+  "trips": {
+    "title": "Trips",
+    "description": "Your travel journal, newest first."
+  },
+  "emailConfirmation": {
+    "loading": "Confirming your e-mail address",
+    "verification": {
+      "done": {
+        "title": "Address confirmed",
+        "description": "You can log in now."
+      },
+      "invalid": {
+        "title": "The link does not work",
+        "description": "The link is invalid or has expired. Log in and we will send a new one."
+      }
+    },
+    "change": {
+      "done": {
+        "title": "New address saved",
+        "description": "From now on you log in with the new e-mail address."
+      },
+      "invalid": {
+        "title": "The link does not work",
+        "description": "The link is invalid or has expired. Change the address in your profile again."
+      },
+      "taken": {
+        "title": "The address is taken",
+        "description": "This address already belongs to another account. Choose a different one in your profile."
+      }
+    },
+    "failed": {
+      "title": "Something went wrong",
+      "description": "Open the link again."
+    },
+    "toLogin": "Go to log in",
+    "toProfile": "Go to profile",
+    "toTrips": "Go to trips"
   }
 }

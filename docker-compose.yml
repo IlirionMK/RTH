@@ -15,6 +15,7 @@ services:
       dockerfile: ./docker/php/Dockerfile
     volumes:
       - ./backend:/var/www/backend
+      - vendor:/var/www/backend/vendor
     depends_on:
       postgres:
         condition: service_healthy
@@ -29,6 +30,7 @@ services:
       - ./web:/app
     environment:
       VITE_USE_POLLING: "true"
+      VITE_API_URL: http://localhost:8000/api
 
   postgres:
     image: postgres:19-alpine
@@ -55,3 +57,4 @@ services:
 
 volumes:
   pgdata:
+  vendor:
