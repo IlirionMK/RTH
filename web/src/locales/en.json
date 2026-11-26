@@ -71,7 +71,66 @@
   },
   "trips": {
     "title": "Trips",
-    "description": "Your travel journal, newest first."
+    "description": "Your travel journal, newest first.",
+    "new": "New trip",
+    "loadError": "We could not load your trips.",
+    "retry": "Try again",
+    "more": "Show more",
+    "countries": "Countries",
+    "transports": "Transport",
+    "empty": {
+      "title": "You have no trips yet",
+      "description": "Add your first trip, then plan its route.",
+      "action": "Add a trip"
+    }
+  },
+  "transport": {
+    "car": "Car",
+    "plane": "Plane",
+    "train": "Train",
+    "other": "Other"
+  },
+  "trip": {
+    "back": "Trips",
+    "newTitle": "New trip",
+    "newDescription": "Name the trip and give its dates. You add places after saving.",
+    "editDescription": "Edit trip",
+    "info": "Details",
+    "name": "Name",
+    "startsOn": "Start date",
+    "endsOn": "End date (optional)",
+    "description": "Description (optional)",
+    "create": "Create trip",
+    "save": "Save",
+    "created": "Trip created. Add places.",
+    "saved": "Changes saved.",
+    "points": {
+      "title": "Points and segments",
+      "description": "Put the places in the order of the trip and choose the transport for each segment.",
+      "empty": "Add the first place with the search.",
+      "added": "Added: {name}.",
+      "moveUp": "Move up: {name}",
+      "moveDown": "Move down: {name}",
+      "remove": "Remove: {name}",
+      "transport": "Transport: {from} – {to}",
+      "approximate": "in a straight line"
+    },
+    "search": {
+      "label": "Add a place",
+      "placeholder": "Search for a place by name",
+      "hint": "Type at least 2 letters.",
+      "searching": "Searching…",
+      "empty": "Nothing found.",
+      "failed": "Search is not available right now. Try later."
+    },
+    "delete": {
+      "open": "Delete trip",
+      "title": "Delete the trip?",
+      "description": "The trip {name} will disappear with its places and segments. You cannot undo this.",
+      "cancel": "Cancel",
+      "confirm": "Delete trip",
+      "done": "Trip deleted."
+    }
   },
   "emailConfirmation": {
     "loading": "Confirming your e-mail address",

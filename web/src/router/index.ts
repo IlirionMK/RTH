@@ -11,12 +11,15 @@ import LoginView from '@/views/LoginView.vue'
 import PlaceholderView from '@/views/PlaceholderView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import TripEditView from '@/views/TripEditView.vue'
+import TripsView from '@/views/TripsView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
     guest?: boolean
     requiresAuth?: boolean
     admin?: boolean
+    nav?: string
   }
 }
 
@@ -29,11 +32,14 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         { path: '', redirect: { name: 'trips.index' } },
+        { path: 'trips', name: 'trips.index', component: TripsView },
+        { path: 'trips/new', name: 'trips.create', component: TripEditView, meta: { nav: 'trips.index' } },
         {
-          path: 'trips',
-          name: 'trips.index',
-          component: PlaceholderView,
-          props: { title: 'trips.title', description: 'trips.description' },
+          path: 'trips/:id/edit',
+          name: 'trips.edit',
+          component: TripEditView,
+          props: (route) => ({ id: Number(route.params.id) }),
+          meta: { nav: 'trips.index' },
         },
         { path: 'map', name: 'map', component: PlaceholderView, props: { title: 'nav.map' } },
         { path: 'stats', name: 'stats', component: PlaceholderView, props: { title: 'nav.stats' } },
