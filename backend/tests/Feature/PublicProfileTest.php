@@ -25,9 +25,29 @@ class PublicProfileTest extends TestCase
         $this->getJson(route('public-profiles.index', ['query' => 'TEST']))
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0', ['id' => $anna->id, 'name' => 'Anna Tester'])
-            ->assertJsonPath('data.1', ['id' => $zoe->id, 'name' => 'Zoe Test'])
+            ->assertJsonPath('data.0', ['id' => $anna->id, 'name' => 'Anna Tester', 'trips_count' => 0, 'countries_count' => 0])
+            ->assertJsonPath('data.1.id', $zoe->id)
             ->assertJsonPath('meta.total', 2);
+    }
+
+    public function test_user_sees_all_public_profiles_with_trip_and_country_counts(): void
+    {
+        $owner = User::factory()->create(['name' => 'Test User', 'is_public' => true]);
+        $summer = Trip::factory()->for($owner)->create();
+        Point::factory()->for($summer)->create(['country_code' => 'DE', 'position' => 1]);
+        Point::factory()->for($summer)->create(['country_code' => 'FR', 'position' => 2]);
+        $winter = Trip::factory()->for($owner)->create();
+        Point::factory()->for($winter)->create(['country_code' => 'DE', 'position' => 1]);
+        Point::factory()->for($winter)->create(['country_code' => null, 'position' => 2]);
+        User::factory()->create(['name' => 'Other User', 'is_public' => true]);
+        User::factory()->create(['name' => 'Private User', 'is_public' => false]);
+        Sanctum::actingAs(User::factory()->create(['name' => 'Viewer User']));
+
+        $this->getJson(route('public-profiles.index'))
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.name', 'Other User')
+            ->assertJsonPath('data.1', ['id' => $owner->id, 'name' => 'Test User', 'trips_count' => 2, 'countries_count' => 2]);
     }
 
     public function test_search_needs_at_least_two_letters(): void

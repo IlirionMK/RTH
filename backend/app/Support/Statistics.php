@@ -8,6 +8,7 @@ final readonly class Statistics
      * @param  array<int, string>  $countries
      * @param  array<string, float>  $distanceByTransport
      * @param  array<int, int>  $years
+     * @param  list<array<string, float|int>>  $distanceByYear
      */
     public function __construct(
         public int $tripsCount,
@@ -16,5 +17,6 @@ final readonly class Statistics
         public float $distanceKm,
         public array $distanceByTransport,
         public array $years,
+        public array $distanceByYear,
     ) {}
 }
