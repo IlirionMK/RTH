@@ -4,6 +4,7 @@ import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import AppLogo from '@/components/AppLogo.vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -100,6 +101,7 @@ watch(() => route.fullPath, () => setOpenMobile(false))
           <p class="truncate text-sm font-medium">{{ auth.user?.name }}</p>
           <p class="truncate text-xs text-muted-foreground">{{ auth.user?.email }}</p>
         </div>
+        <ThemeToggle />
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="ghost" size="icon" :aria-label="$t('nav.logout')" @click="auth.logout()">

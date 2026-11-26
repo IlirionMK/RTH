@@ -106,5 +106,9 @@
     "toLogin": "Przejdź do logowania",
     "toProfile": "Przejdź do profilu",
     "toTrips": "Przejdź do podróży"
+  },
+  "theme": {
+    "toLight": "Włącz jasny motyw",
+    "toDark": "Włącz ciemny motyw"
   }
 }
