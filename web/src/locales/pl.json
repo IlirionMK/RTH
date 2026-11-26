@@ -71,7 +71,66 @@
   },
   "trips": {
     "title": "Podróże",
-    "description": "Twój dziennik podróży, od najnowszej."
+    "description": "Twój dziennik podróży, od najnowszej.",
+    "new": "Nowa podróż",
+    "loadError": "Nie udało się wczytać podróży.",
+    "retry": "Spróbuj ponownie",
+    "more": "Pokaż więcej",
+    "countries": "Państwa",
+    "transports": "Środki transportu",
+    "empty": {
+      "title": "Nie masz jeszcze podróży",
+      "description": "Dodaj pierwszą podróż, a potem ułóż jej trasę.",
+      "action": "Dodaj podróż"
+    }
+  },
+  "transport": {
+    "car": "Samochód",
+    "plane": "Samolot",
+    "train": "Pociąg",
+    "other": "Inne"
+  },
+  "trip": {
+    "back": "Podróże",
+    "newTitle": "Nowa podróż",
+    "newDescription": "Nazwij podróż i podaj daty. Miejsca dodasz po zapisaniu.",
+    "editDescription": "Edycja podróży",
+    "info": "Informacje",
+    "name": "Nazwa",
+    "startsOn": "Data rozpoczęcia",
+    "endsOn": "Data zakończenia (opcjonalnie)",
+    "description": "Opis (opcjonalnie)",
+    "create": "Utwórz podróż",
+    "save": "Zapisz",
+    "created": "Podróż utworzona. Dodaj miejsca.",
+    "saved": "Zmiany zapisane.",
+    "points": {
+      "title": "Punkty i odcinki",
+      "description": "Ułóż miejsca w kolejności podróży i wybierz środek transportu dla każdego odcinka.",
+      "empty": "Dodaj pierwsze miejsce przez wyszukiwarkę.",
+      "added": "Dodano: {name}.",
+      "moveUp": "Przesuń wyżej: {name}",
+      "moveDown": "Przesuń niżej: {name}",
+      "remove": "Usuń: {name}",
+      "transport": "Środek transportu: {from} – {to}",
+      "approximate": "w linii prostej"
+    },
+    "search": {
+      "label": "Dodaj miejsce",
+      "placeholder": "Szukaj miejsca po nazwie",
+      "hint": "Wpisz co najmniej 2 litery.",
+      "searching": "Szukamy…",
+      "empty": "Nic nie znaleziono.",
+      "failed": "Wyszukiwanie jest teraz niedostępne. Spróbuj później."
+    },
+    "delete": {
+      "open": "Usuń podróż",
+      "title": "Usunąć podróż?",
+      "description": "Podróż {name} zniknie razem z miejscami i odcinkami. Tego nie da się cofnąć.",
+      "cancel": "Anuluj",
+      "confirm": "Usuń podróż",
+      "done": "Podróż usunięta."
+    }
   },
   "emailConfirmation": {
     "loading": "Potwierdzamy adres e-mail",

@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
-    "@lucide/vue": "^1.79.0",
+    "@lucide/vue": "^1.81.0",
     "@vueuse/core": "^15.1.0",
     "axios": "^1.21.1",
     "class-variance-authority": "^0.7.1",
