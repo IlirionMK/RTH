@@ -20,6 +20,7 @@
     "Bad Gateway": "Zła brama",
     "Bad Request": "Nieprawidłowe żądanie",
     "Bandwidth Limit Exceeded": "Przekroczono limit transferu danych",
+    "blocking": "blokada",
     "Browse": "Przeglądaj",
     "Cancel": "Anuluj",
     "Choose": "Wybierz",
@@ -245,5 +246,8 @@
     "Yes": "Tak",
     "You already have an account": "Masz już konto",
     "You already have an account with this address, so nothing has changed.": "Masz już konto z tym adresem, więc nic się nie zmieniło.",
-    "You are receiving this email because we received a password reset request for your account.": "Otrzymujesz ten e-mail, ponieważ otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta."
+    "You are receiving this email because we received a password reset request for your account.": "Otrzymujesz ten e-mail, ponieważ otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta.",
+    "You cannot block your own account.": "Nie możesz zablokować własnego konta.",
+    "You cannot change your own role.": "Nie możesz zmienić własnej roli.",
+    "Your account is blocked.": "Twoje konto jest zablokowane."
 }

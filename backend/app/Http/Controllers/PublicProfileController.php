@@ -13,7 +13,7 @@ class PublicProfileController extends Controller
     {
         return PublicProfileResource::collection(
             User::query()
-                ->where('is_public', true)
+                ->withPublicProfile()
                 ->whereLike('name', '%'.$request->string('query')->value().'%')
                 ->orderBy('name')
                 ->orderBy('id')

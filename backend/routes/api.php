@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminStatisticsController;
+use App\Http\Controllers\AdminTripController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\EmailChangeController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\MapController;
@@ -46,4 +49,10 @@ Route::middleware('auth:sanctum')->group(function (): void {
         ->name('public-profiles.map.show');
     Route::get('public-profiles/{public_profile}/statistics', [PublicProfileStatisticsController::class, 'show'])
         ->name('public-profiles.statistics.show');
+
+    Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function (): void {
+        Route::apiResource('users', AdminUserController::class)->only(['index', 'update']);
+        Route::apiResource('trips', AdminTripController::class)->only('index');
+        Route::get('statistics', [AdminStatisticsController::class, 'show'])->name('statistics.show');
+    });
 });
