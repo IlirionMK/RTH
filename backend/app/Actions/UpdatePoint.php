@@ -3,12 +3,16 @@
 namespace App\Actions;
 
 use App\Models\Point;
+use App\Models\Segment;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class UpdatePoint
 {
-    public function __construct(private SyncSegments $syncSegments) {}
+    public function __construct(
+        private SyncSegments $syncSegments,
+        private RouteSegment $routeSegment,
+    ) {}
 
     /**
      * @param  array<string, mixed>  $attributes
@@ -17,6 +21,14 @@ class UpdatePoint
     {
         return DB::transaction(function () use ($point, $attributes): Point {
             $point->update(Arr::except($attributes, 'position'));
+
+            if ($point->wasChanged(['latitude', 'longitude'])) {
+                $segments = Segment::where('from_point_id', $point->id)->orWhere('to_point_id', $point->id)->get();
+
+                foreach ($segments as $segment) {
+                    $this->routeSegment->handle($segment);
+                }
+            }
 
             if (array_key_exists('position', $attributes)) {
                 $this->move($point, (int) $attributes['position']);

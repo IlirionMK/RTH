@@ -27,6 +27,8 @@ class SegmentFactory extends Factory
                 'trip_id' => $attributes['trip_id'],
                 'position' => 2,
             ]),
+            'geometry' => ['type' => 'LineString', 'coordinates' => [[13.405, 52.52], [2.3522, 48.8566]]],
+            'distance_km' => 877.5,
         ];
     }
 }

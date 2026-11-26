@@ -7,12 +7,20 @@ use App\Models\Segment;
 use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class PointTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Http::fake();
+    }
 
     public function test_user_adds_points_and_segments_join_them(): void
     {

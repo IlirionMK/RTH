@@ -49,6 +49,7 @@ class ApiDocumentationTest extends TestCase
                     '/trips/{trip}/points' => ['post' => ['responses' => ['201']]],
                     '/points/{point}' => ['get', 'patch', 'delete'],
                     '/segments/{segment}' => ['patch'],
+                    '/places' => ['get'],
                 ],
             ])
             ->assertJsonPath('components.schemas.Transport.enum', ['car', 'plane', 'train', 'other']);

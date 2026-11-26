@@ -8,6 +8,8 @@ use Illuminate\Support\Collection;
 
 class SyncSegments
 {
+    public function __construct(private RouteSegment $routeSegment) {}
+
     public function handle(Trip $trip): void
     {
         $segments = $trip->segments()->get()
@@ -19,7 +21,9 @@ class SyncSegments
         Segment::whereKey($segments->diffKeys($pairs)->modelKeys())->delete();
 
         foreach ($pairs->diffKeys($segments) as $pair) {
-            $trip->segments()->create(['from_point_id' => $pair->first(), 'to_point_id' => $pair->last()]);
+            $this->routeSegment->handle(
+                $trip->segments()->make(['from_point_id' => $pair->first(), 'to_point_id' => $pair->last()]),
+            );
         }
     }
 }
