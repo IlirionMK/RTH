@@ -10,6 +10,6 @@ class PublicProfileTripController extends Controller
 {
     public function index(User $user): AnonymousResourceCollection
     {
-        return TripResource::collection($user->trips()->latest('starts_on')->latest('id')->paginate());
+        return TripResource::collection($user->trips()->withSummary()->latest('starts_on')->latest('id')->paginate());
     }
 }

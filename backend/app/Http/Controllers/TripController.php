@@ -18,7 +18,7 @@ class TripController extends Controller
 {
     public function index(#[CurrentUser] User $user): AnonymousResourceCollection
     {
-        return TripResource::collection($user->trips()->latest('starts_on')->latest('id')->paginate());
+        return TripResource::collection($user->trips()->withSummary()->latest('starts_on')->latest('id')->paginate());
     }
 
     public function store(StoreTripRequest $request, #[CurrentUser] User $user): JsonResponse

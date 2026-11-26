@@ -46,6 +46,19 @@ class Trip extends Model
      * @param  Builder<self>  $query
      */
     #[Scope]
+    protected function withSummary(Builder $query): void
+    {
+        $query->with('points')
+            ->withSum('segments as distance_km', 'distance_km')
+            ->addSelect(['transports' => Segment::query()
+                ->selectRaw("string_agg(distinct transport, ',' order by transport)")
+                ->whereColumn('segments.trip_id', 'trips.id')]);
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
     protected function startedIn(Builder $query, ?int $year): void
     {
         if ($year !== null) {

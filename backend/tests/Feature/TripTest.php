@@ -92,6 +92,30 @@ class TripTest extends TestCase
             ->assertJsonPath('data.2.name', 'Older Trip');
     }
 
+    public function test_trip_list_shows_route_countries_transports_and_distance(): void
+    {
+        $user = User::factory()->create();
+        $trip = Trip::factory()->for($user)->create(['starts_on' => '2026-05-01']);
+        $berlin = Point::factory()->for($trip)->create(['name' => 'Berlin', 'position' => 1, 'country_code' => 'DE']);
+        $paris = Point::factory()->for($trip)->create(['name' => 'Paris', 'position' => 2, 'country_code' => 'FR']);
+        $munich = Point::factory()->for($trip)->create(['name' => 'Munich', 'position' => 3, 'country_code' => 'DE']);
+        Segment::factory()->for($trip)->create(['from_point_id' => $berlin->id, 'to_point_id' => $paris->id, 'transport' => 'plane', 'distance_km' => 877.5]);
+        Segment::factory()->for($trip)->create(['from_point_id' => $paris->id, 'to_point_id' => $munich->id, 'transport' => 'car', 'distance_km' => 832.4]);
+        Trip::factory()->for($user)->create(['starts_on' => '2025-05-01']);
+        Sanctum::actingAs($user);
+
+        $this->getJson(route('trips.index'))
+            ->assertOk()
+            ->assertJsonPath('data.0.distance_km', 1709.9)
+            ->assertJsonPath('data.0.countries', ['DE', 'FR'])
+            ->assertJsonPath('data.0.transports', ['car', 'plane'])
+            ->assertJsonPath('data.0.points.*.name', ['Berlin', 'Paris', 'Munich'])
+            ->assertJsonMissingPath('data.0.segments')
+            ->assertJsonPath('data.1.distance_km', 0)
+            ->assertJsonPath('data.1.countries', [])
+            ->assertJsonPath('data.1.transports', []);
+    }
+
     public function test_trip_list_is_paginated(): void
     {
         $user = User::factory()->create();
