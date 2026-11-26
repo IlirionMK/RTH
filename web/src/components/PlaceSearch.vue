@@ -47,7 +47,7 @@ watchDebounced(
       const found = await searchPlaces(query)
 
       if (request === latest) {
-        places.value = found
+        places.value = found.filter((place, index) => found.findIndex((other) => other.label === place.label) === index)
       }
     } catch {
       if (request === latest) {

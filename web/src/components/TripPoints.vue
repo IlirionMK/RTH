@@ -108,9 +108,14 @@ function changeTransport(segment: Segment, value: unknown): void {
           :aria-label="$t('trip.points.transport', { from: point.name, to: next.name })"
           @update:model-value="changeTransport(segment, $event)"
         >
-          <ToggleGroupItem v-for="transport in transports" :key="transport" :value="transport">
+          <ToggleGroupItem
+            v-for="transport in transports"
+            :key="transport"
+            :value="transport"
+            class="data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:hover:bg-primary/90 data-[state=on]:hover:text-primary-foreground"
+          >
             <component :is="transportIcons[transport]" aria-hidden="true" />
-            {{ $t(`transport.${transport}`) }}
+            <span class="sr-only sm:not-sr-only">{{ $t(`transport.${transport}`) }}</span>
           </ToggleGroupItem>
         </ToggleGroup>
         <span class="text-sm text-muted-foreground tabular-nums">

@@ -44,6 +44,17 @@ describe('PlaceSearch', () => {
     expect(searchPlaces).toHaveBeenCalledWith('Berl')
   })
 
+  it('shows places with the same label once', async () => {
+    vi.mocked(searchPlaces).mockResolvedValue([berlin, { ...berlin, latitude: 52.51 }])
+    const wrapper = mountSearch()
+
+    await wrapper.find('#place-search').setValue('Berl')
+    await vi.advanceTimersByTimeAsync(300)
+    await flushPromises()
+
+    expect(document.body.querySelectorAll('[role="option"]')).toHaveLength(1)
+  })
+
   it('gives the chosen place to the trip', async () => {
     vi.mocked(searchPlaces).mockResolvedValue([berlin])
     const wrapper = mountSearch()
