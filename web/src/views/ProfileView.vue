@@ -13,6 +13,7 @@ import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from '@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Spinner } from '@/components/ui/spinner'
 import { type FieldErrors, validationErrors } from '@/lib/api'
+import { celebrate } from '@/lib/celebrate'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
@@ -36,7 +37,8 @@ const pendingEmail = computed(() =>
   auth.user?.pending_email ? t('profile.emailPending', { email: auth.user.pending_email }) : undefined,
 )
 
-async function saveBasics(): Promise<void> {
+async function saveBasics(event: Event): Promise<void> {
+  const origin = (event as SubmitEvent).submitter ?? (event.currentTarget as Element)
   savingBasics.value = true
   basicsErrors.value = {}
   const emailChanged = basics.email !== auth.user?.email
@@ -46,6 +48,7 @@ async function saveBasics(): Promise<void> {
     auth.setUser(user)
     basics.email = user.email
     toast.success(t(emailChanged && user.pending_email ? 'profile.emailSent' : 'profile.saved'))
+    celebrate(origin, 'don')
   } catch (error) {
     showError(error, basicsErrors)
   } finally {
