@@ -39,6 +39,21 @@ class ApiDocumentationTest extends TestCase
         ]);
     }
 
+    public function test_trip_endpoints_are_documented(): void
+    {
+        $this->getJson('/docs/api.json')
+            ->assertJsonStructure([
+                'paths' => [
+                    '/trips' => ['get', 'post' => ['responses' => ['201']]],
+                    '/trips/{trip}' => ['get', 'patch', 'delete'],
+                    '/trips/{trip}/points' => ['post' => ['responses' => ['201']]],
+                    '/points/{point}' => ['get', 'patch', 'delete'],
+                    '/segments/{segment}' => ['patch'],
+                ],
+            ])
+            ->assertJsonPath('components.schemas.Transport.enum', ['car', 'plane', 'train', 'other']);
+    }
+
     public function test_language_and_theme_are_documented_as_enums(): void
     {
         $this->getJson('/docs/api.json')
