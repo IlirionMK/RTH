@@ -14,6 +14,11 @@ return [
     |
     */
 
+    'openrouteservice' => [
+        'key' => env('ORS_KEY', ''),
+        'url' => 'https://api.heigit.org',
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

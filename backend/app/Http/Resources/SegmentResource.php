@@ -21,6 +21,10 @@ class SegmentResource extends JsonResource
             'from_point_id' => $this->from_point_id,
             'to_point_id' => $this->to_point_id,
             'transport' => $this->transport,
+            'distance_km' => $this->distance_km,
+            'is_approximate' => $this->is_approximate,
+            /** @var array{type: 'LineString', coordinates: list<array{float, float}>} */
+            'geometry' => $this->geometry,
         ];
     }
 }

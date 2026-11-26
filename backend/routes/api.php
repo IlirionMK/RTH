@@ -3,6 +3,7 @@
 use App\Http\Controllers\EmailChangeController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\PointController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SegmentController;
@@ -30,4 +31,5 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::apiResource('trips', TripController::class);
     Route::apiResource('trips.points', PointController::class)->shallow()->except('index');
     Route::apiResource('segments', SegmentController::class)->only('update');
+    Route::get('places', [PlaceController::class, 'index'])->middleware('throttle:30,1')->name('places.index');
 });
