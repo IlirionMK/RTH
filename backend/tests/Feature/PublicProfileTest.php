@@ -117,6 +117,19 @@ class PublicProfileTest extends TestCase
         $this->getJson(route('points.show', $point))->assertForbidden();
     }
 
+    public function test_blocked_public_profile_disappears(): void
+    {
+        $owner = User::factory()->blocked()->create(['name' => 'Blocked Test', 'is_public' => true]);
+        $trip = Trip::factory()->for($owner)->create();
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->getJson(route('public-profiles.index', ['query' => 'Blocked']))
+            ->assertOk()
+            ->assertJsonCount(0, 'data');
+        $this->getJson(route('public-profiles.show', $owner))->assertNotFound();
+        $this->getJson(route('trips.show', $trip))->assertForbidden();
+    }
+
     public function test_guest_cannot_see_public_profiles(): void
     {
         $owner = User::factory()->create(['is_public' => true]);

@@ -17,6 +17,10 @@ class CreateToken
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
+        if ($user->blocked_at !== null) {
+            throw ValidationException::withMessages(['email' => __('Your account is blocked.')]);
+        }
+
         if (! $user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();
 

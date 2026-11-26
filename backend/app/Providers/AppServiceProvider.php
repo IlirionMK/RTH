@@ -19,8 +19,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('viewApiDocs', fn (?User $user): bool => true);
+        Gate::define('admin', fn (User $user): bool => $user->isAdmin());
 
-        Route::bind('public_profile', fn (string $value): User => User::query()->where('is_public', true)->findOrFail($value));
+        Route::bind('public_profile', fn (string $value): User => User::query()->withPublicProfile()->findOrFail($value));
 
         VerifyEmail::createUrlUsing(fn (User $user): string => SignedFrontendUrl::make('email-verifications.store', [
             'user' => $user->id,

@@ -109,6 +109,34 @@ class TokenTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    public function test_blocked_user_gets_no_token(): void
+    {
+        User::factory()->blocked()->create(['email' => 'test@example.com']);
+
+        $this->postJson(route('tokens.store'), [
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'device_name' => 'phone',
+        ], ['Accept-Language' => 'pl'])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.email.0', 'Twoje konto jest zablokowane.');
+
+        $this->assertDatabaseCount('personal_access_tokens', 0);
+    }
+
+    public function test_blocked_user_with_wrong_password_is_not_told_about_the_block(): void
+    {
+        User::factory()->blocked()->create(['email' => 'test@example.com']);
+
+        $this->postJson(route('tokens.store'), [
+            'email' => 'test@example.com',
+            'password' => 'wrong-password',
+            'device_name' => 'phone',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.email.0', __('auth.failed'));
+    }
+
     public function test_login_requires_email_password_and_device_name(): void
     {
         $this->postJson(route('tokens.store'))
