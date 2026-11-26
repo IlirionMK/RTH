@@ -11,7 +11,6 @@ import LoginView from '@/views/LoginView.vue'
 import PlaceholderView from '@/views/PlaceholderView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import TripEditView from '@/views/TripEditView.vue'
 import TripsView from '@/views/TripsView.vue'
 
 declare module 'vue-router' {
@@ -33,15 +32,22 @@ const router = createRouter({
       children: [
         { path: '', redirect: { name: 'trips.index' } },
         { path: 'trips', name: 'trips.index', component: TripsView },
-        { path: 'trips/new', name: 'trips.create', component: TripEditView, meta: { nav: 'trips.index' } },
+        { path: 'trips/new', name: 'trips.create', component: () => import('@/views/TripEditView.vue'), meta: { nav: 'trips.index' } },
         {
           path: 'trips/:id/edit',
           name: 'trips.edit',
-          component: TripEditView,
+          component: () => import('@/views/TripEditView.vue'),
           props: (route) => ({ id: Number(route.params.id) }),
           meta: { nav: 'trips.index' },
         },
-        { path: 'map', name: 'map', component: PlaceholderView, props: { title: 'nav.map' } },
+        { path: 'map', name: 'map', component: () => import('@/views/MapView.vue') },
+        {
+          path: 'trips/:id/map',
+          name: 'trips.map',
+          component: () => import('@/views/TripMapView.vue'),
+          props: (route) => ({ id: Number(route.params.id) }),
+          meta: { nav: 'trips.index' },
+        },
         { path: 'stats', name: 'stats', component: PlaceholderView, props: { title: 'nav.stats' } },
         { path: 'discover', name: 'discover', component: PlaceholderView, props: { title: 'nav.discover' } },
         { path: 'profile', name: 'profile', component: ProfileView },

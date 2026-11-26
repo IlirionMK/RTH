@@ -34,6 +34,14 @@ class CollectStatistics
             placesCount: (int) $points->clone()->toBase()->selectRaw('count(distinct (round(latitude, 3), round(longitude, 3))) as places')->value('places'),
             distanceKm: round(array_sum($distanceByTransport), 1),
             distanceByTransport: $distanceByTransport,
+            years: Trip::query()
+                ->whereBelongsTo($user)
+                ->toBase()
+                ->selectRaw('distinct extract(year from starts_on)::int as year')
+                ->orderByDesc('year')
+                ->pluck('year')
+                ->map(fn (mixed $year): int => (int) $year)
+                ->all(),
         );
     }
 }

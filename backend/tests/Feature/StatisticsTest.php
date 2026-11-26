@@ -26,7 +26,8 @@ class StatisticsTest extends TestCase
             ->assertJsonPath('data.countries', ['DE', 'FR', 'IT'])
             ->assertJsonPath('data.places_count', 4)
             ->assertJsonPath('data.distance_km', 2479.2)
-            ->assertJsonPath('data.distance_by_transport', ['car' => 1054.3, 'plane' => 1182.5, 'train' => 242.4, 'other' => 0]);
+            ->assertJsonPath('data.distance_by_transport', ['car' => 1054.3, 'plane' => 1182.5, 'train' => 242.4, 'other' => 0])
+            ->assertJsonPath('data.years', [2025, 2024]);
     }
 
     public function test_statistics_of_year_count_trips_by_start_date(): void
@@ -39,7 +40,8 @@ class StatisticsTest extends TestCase
             ->assertJsonPath('data.trips_count', 1)
             ->assertJsonPath('data.countries', ['DE', 'FR'])
             ->assertJsonPath('data.places_count', 2)
-            ->assertJsonPath('data.distance_km', 1054.3);
+            ->assertJsonPath('data.distance_km', 1054.3)
+            ->assertJsonPath('data.years', [2025, 2024]);
         $this->getJson(route('statistics.show', ['year' => 2025]))
             ->assertOk()
             ->assertJsonPath('data.trips_count', 1)
@@ -61,6 +63,7 @@ class StatisticsTest extends TestCase
                 'places_count' => 0,
                 'distance_km' => 0,
                 'distance_by_transport' => ['car' => 0, 'plane' => 0, 'train' => 0, 'other' => 0],
+                'years' => [],
             ]);
     }
 

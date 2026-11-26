@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { CalendarDays } from '@lucide/vue'
+import { CalendarDays, MapIcon } from '@lucide/vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { countryName, formatDates, formatDistance } from '@/lib/format'
 import { transportIcons } from '@/lib/transports'
 import type { Trip } from '@/types/trip'
@@ -57,5 +58,12 @@ const distance = computed(() => formatDistance(props.trip.distance_km ?? 0, loca
     </ul>
 
     <p class="text-lg font-semibold tabular-nums md:w-28 md:text-right">{{ distance }}</p>
+
+    <Button variant="outline" size="sm" class="self-start md:self-center" as-child>
+      <RouterLink :to="{ name: 'trips.map', params: { id: trip.id } }" :aria-label="$t('trips.openMap', { name: trip.name })">
+        <MapIcon aria-hidden="true" />
+        {{ $t('trips.map') }}
+      </RouterLink>
+    </Button>
   </article>
 </template>
