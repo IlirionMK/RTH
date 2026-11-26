@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Actions\CollectMapSegments;
+use App\Http\Requests\ShowMapRequest;
+use App\Http\Resources\MapResource;
+use App\Models\User;
+
+class PublicProfileMapController extends Controller
+{
+    public function show(ShowMapRequest $request, User $user, CollectMapSegments $collectMapSegments): MapResource
+    {
+        return MapResource::make(
+            $collectMapSegments->handle($user, $request->filled('year') ? $request->integer('year') : null),
+        );
+    }
+}

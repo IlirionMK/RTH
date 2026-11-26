@@ -9,7 +9,7 @@ class TripPolicy
 {
     public function view(User $user, Trip $trip): bool
     {
-        return $user->id === $trip->user_id;
+        return $user->id === $trip->user_id || $trip->user->is_public;
     }
 
     public function update(User $user, Trip $trip): bool
