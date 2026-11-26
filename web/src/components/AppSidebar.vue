@@ -54,7 +54,7 @@ watch(() => route.fullPath, () => setOpenMobile(false))
 </script>
 
 <template>
-  <Sidebar>
+  <Sidebar class="[view-transition-name:sidebar]">
     <SidebarHeader class="px-4 py-3">
       <AppLogo />
     </SidebarHeader>
@@ -64,7 +64,7 @@ watch(() => route.fullPath, () => setOpenMobile(false))
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem v-for="item in mainItems" :key="item.name">
-              <SidebarMenuButton as-child :is-active="route.name === item.name">
+              <SidebarMenuButton as-child :is-active="route.name === item.name" class="data-active:[view-transition-name:nav-active]">
                 <RouterLink :to="{ name: item.name }">
                   <component :is="item.icon" aria-hidden="true" />
                   <span>{{ $t(item.label) }}</span>
@@ -80,7 +80,7 @@ watch(() => route.fullPath, () => setOpenMobile(false))
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem v-for="item in adminItems" :key="item.name">
-              <SidebarMenuButton as-child :is-active="route.name === item.name">
+              <SidebarMenuButton as-child :is-active="route.name === item.name" class="data-active:[view-transition-name:nav-active]">
                 <RouterLink :to="{ name: item.name }">
                   <component :is="item.icon" aria-hidden="true" />
                   <span>{{ $t(item.label) }}</span>

@@ -16,8 +16,10 @@ export async function revealFrom(origin: HTMLElement, update: () => Promise<void
   const x = rect.left + rect.width / 2
   const y = rect.top + rect.height / 2
   const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+  document.documentElement.dataset.transition = 'theme'
   const transition = document.startViewTransition(update)
 
+  transition.finished.finally(() => delete document.documentElement.dataset.transition)
   await transition.ready
   document.documentElement.animate(
     { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },

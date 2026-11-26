@@ -9,7 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle.vue'
       <ThemeToggle />
     </div>
     <AppLogo />
-    <div class="flex w-full max-w-sm flex-col gap-6">
+    <div class="flex w-full max-w-sm flex-col gap-6 [view-transition-name:auth-card]">
       <RouterView />
     </div>
   </main>

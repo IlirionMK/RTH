@@ -77,6 +77,24 @@ describe('router', () => {
     expect(router.currentRoute.value.name).toBe('email-change')
   })
 
+  it('animates the change of screens with a view transition', async () => {
+    const startViewTransition = vi.fn<(update: () => Promise<void>) => Partial<ViewTransition>>((update) => {
+      const done = update()
+
+      return { ready: done, finished: done, updateCallbackDone: done }
+    })
+    vi.stubGlobal('matchMedia', () => ({ matches: false }))
+    Object.assign(document, { startViewTransition })
+
+    await router.push({ name: 'register' })
+
+    expect(startViewTransition).toHaveBeenCalledTimes(1)
+    expect(router.currentRoute.value.name).toBe('register')
+
+    Reflect.deleteProperty(document, 'startViewTransition')
+    vi.unstubAllGlobals()
+  })
+
   it('logs out when the profile cannot be loaded', async () => {
     vi.mocked(getProfile).mockRejectedValue(new Error('Network error'))
     token.value = 'test-token'
