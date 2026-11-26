@@ -14,6 +14,8 @@ class RouteSegment
 
     private const ARC_STEPS = 64;
 
+    private const MAP_TOLERANCE_DEGREES = 0.005;
+
     public function handle(Segment $segment): void
     {
         $from = [$segment->fromPoint->longitude, $segment->fromPoint->latitude];
@@ -29,6 +31,7 @@ class RouteSegment
 
         $segment->fill([
             'geometry' => ['type' => 'LineString', 'coordinates' => $coordinates],
+            'map_geometry' => ['type' => 'LineString', 'coordinates' => $this->simplify($coordinates)],
             'distance_km' => round($distance, 1),
             'is_approximate' => $segment->transport === Transport::Car && $road === null,
         ])->save();
@@ -107,5 +110,62 @@ class RouteSegment
             + cos($latitude1) * cos($latitude2) * sin(($longitude2 - $longitude1) / 2) ** 2;
 
         return 2 * asin(min(1.0, sqrt($haversine)));
+    }
+
+    /**
+     * @param  array<mixed>  $coordinates
+     * @return list<mixed>
+     */
+    private function simplify(array $coordinates): array
+    {
+        $coordinates = array_values($coordinates);
+        $last = count($coordinates) - 1;
+
+        if ($last < 2) {
+            return $coordinates;
+        }
+
+        $kept = [0 => true, $last => true];
+        $ranges = [[0, $last]];
+
+        while ($ranges !== []) {
+            [$start, $end] = array_pop($ranges);
+            $farthest = null;
+            $farthestOffset = self::MAP_TOLERANCE_DEGREES;
+
+            for ($index = $start + 1; $index < $end; $index++) {
+                $offset = $this->offset($coordinates[$index], $coordinates[$start], $coordinates[$end]);
+
+                if ($offset > $farthestOffset) {
+                    $farthest = $index;
+                    $farthestOffset = $offset;
+                }
+            }
+
+            if ($farthest !== null) {
+                $kept[$farthest] = true;
+                $ranges[] = [$start, $farthest];
+                $ranges[] = [$farthest, $end];
+            }
+        }
+
+        ksort($kept);
+
+        return array_values(array_intersect_key($coordinates, $kept));
+    }
+
+    /**
+     * @param  array{float, float}  $point
+     * @param  array{float, float}  $start
+     * @param  array{float, float}  $end
+     */
+    private function offset(array $point, array $start, array $end): float
+    {
+        $dx = $end[0] - $start[0];
+        $dy = $end[1] - $start[1];
+        $length = $dx ** 2 + $dy ** 2;
+        $share = $length > 0 ? max(0, min(1, (($point[0] - $start[0]) * $dx + ($point[1] - $start[1]) * $dy) / $length)) : 0;
+
+        return hypot($point[0] - $start[0] - $share * $dx, $point[1] - $start[1] - $share * $dy);
     }
 }

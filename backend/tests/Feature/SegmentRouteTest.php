@@ -19,6 +19,13 @@ class SegmentRouteTest extends TestCase
 
     private const PARIS = ['Paris', 48.8566, 2.3522];
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Http::fake(['api.heigit.org/pelias/*' => Http::response(['features' => []])]);
+    }
+
     public function test_car_segment_follows_roads(): void
     {
         Http::fake(['api.heigit.org/openrouteservice/*' => Http::response($this->road())]);
@@ -28,8 +35,20 @@ class SegmentRouteTest extends TestCase
         $this->assertSame([[13.405, 52.52], [8.6821, 50.1109], [2.3522, 48.8566]], $segment->geometry['coordinates']);
         $this->assertSame(1054.3, $segment->distance_km);
         $this->assertFalse($segment->is_approximate);
-        Http::assertSent(fn (Request $request): bool => $request->hasHeader('Authorization', 'test-key')
+        Http::assertSent(fn (Request $request): bool => str_contains($request->url(), '/openrouteservice/')
+            && $request->hasHeader('Authorization', 'test-key')
             && $request['coordinates'] === [[13.405, 52.52], [2.3522, 48.8566]]);
+    }
+
+    public function test_map_line_drops_points_closer_than_500_metres_to_it(): void
+    {
+        $coordinates = [[10.1, 50.1], [10.6, 50.104], [11.1, 50.1], [11.106, 50.6], [11.1, 51.1]];
+        Http::fake(['api.heigit.org/openrouteservice/*' => Http::response($this->road($coordinates))]);
+
+        $segment = $this->tripWith([['Start', 50.1, 10.1], ['End', 51.1, 11.1]])->segments()->sole();
+
+        $this->assertSame($coordinates, $segment->geometry['coordinates']);
+        $this->assertSame([[10.1, 50.1], [11.1, 50.1], [11.106, 50.6], [11.1, 51.1]], $segment->map_geometry['coordinates']);
     }
 
     public function test_car_segment_is_approximate_straight_line_when_no_road_is_found(): void
@@ -59,7 +78,7 @@ class SegmentRouteTest extends TestCase
         $this->tripWith([self::BERLIN, self::PARIS]);
         $this->tripWith([self::BERLIN, self::PARIS]);
 
-        Http::assertSentCount(1);
+        $this->assertRoadsAsked(1);
     }
 
     public function test_plane_segment_is_arc_along_great_circle(): void
@@ -78,7 +97,7 @@ class SegmentRouteTest extends TestCase
         $this->assertSame([13.405, 52.52], $coordinates[0]);
         $this->assertSame([-74.006, 40.7128], $coordinates[64]);
         $this->assertGreaterThan(52.52, $coordinates[20][1]);
-        Http::assertSentCount(1);
+        $this->assertRoadsAsked(1);
     }
 
     public function test_plane_arc_over_pacific_does_not_jump_across_map(): void
@@ -154,14 +173,20 @@ class SegmentRouteTest extends TestCase
         return $trip;
     }
 
+    private function assertRoadsAsked(int $count): void
+    {
+        $this->assertCount($count, Http::recorded(fn (Request $request): bool => str_contains($request->url(), '/openrouteservice/')));
+    }
+
     /**
+     * @param  list<array{float, float}>  $coordinates
      * @return array<string, mixed>
      */
-    private function road(): array
+    private function road(array $coordinates = [[13.405, 52.52], [8.6821, 50.1109], [2.3522, 48.8566]]): array
     {
         return [
             'features' => [[
-                'geometry' => ['type' => 'LineString', 'coordinates' => [[13.405, 52.52], [8.6821, 50.1109], [2.3522, 48.8566]]],
+                'geometry' => ['type' => 'LineString', 'coordinates' => $coordinates],
                 'properties' => ['summary' => ['distance' => 1054321.0]],
             ]],
         ];

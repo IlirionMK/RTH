@@ -22,6 +22,7 @@ class PointResource extends JsonResource
             'name' => $this->name,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'country_code' => $this->country_code,
             'position' => $this->position,
         ];
     }

@@ -12,6 +12,7 @@ class UpdatePoint
     public function __construct(
         private SyncSegments $syncSegments,
         private RouteSegment $routeSegment,
+        private ResolveCountry $resolveCountry,
     ) {}
 
     /**
@@ -20,7 +21,13 @@ class UpdatePoint
     public function handle(Point $point, array $attributes): Point
     {
         return DB::transaction(function () use ($point, $attributes): Point {
-            $point->update(Arr::except($attributes, 'position'));
+            $point->fill(Arr::except($attributes, 'position'));
+
+            if ($point->isDirty(['latitude', 'longitude'])) {
+                $point->country_code = $this->resolveCountry->handle($point->latitude, $point->longitude);
+            }
+
+            $point->save();
 
             if ($point->wasChanged(['latitude', 'longitude'])) {
                 $segments = Segment::where('from_point_id', $point->id)->orWhere('to_point_id', $point->id)->get();

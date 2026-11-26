@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'latitude', 'longitude', 'position'])]
+#[Fillable(['name', 'latitude', 'longitude', 'position', 'country_code'])]
 class Point extends Model
 {
     /** @use HasFactory<PointFactory> */

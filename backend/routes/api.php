@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\EmailChangeController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\PointController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SegmentController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\UserController;
@@ -32,4 +34,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::apiResource('trips.points', PointController::class)->shallow()->except('index');
     Route::apiResource('segments', SegmentController::class)->only('update');
     Route::get('places', [PlaceController::class, 'index'])->middleware('throttle:30,1')->name('places.index');
+    Route::get('map', [MapController::class, 'show'])->name('map.show');
+    Route::get('statistics', [StatisticsController::class, 'show'])->name('statistics.show');
 });
