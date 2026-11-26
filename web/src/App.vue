@@ -1,11 +1,28 @@
 <script setup lang="ts">
-import { Toaster } from '@/components/ui/sonner'
-import { useTheme } from '@/composables/useTheme'
+import { watch } from 'vue'
 
-useTheme()
+import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { useTheme } from '@/composables/useTheme'
+import { useAuthStore } from '@/stores/auth'
+
+const { theme } = useTheme()
+const auth = useAuthStore()
+
+watch(
+  () => auth.user?.theme,
+  (value) => {
+    if (value) {
+      theme.value = value
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
-  <RouterView />
+  <TooltipProvider>
+    <RouterView />
+  </TooltipProvider>
   <Toaster />
 </template>

@@ -3,7 +3,8 @@ import { computed, ref, watch } from 'vue'
 
 import { createToken, deleteToken, register as createUser } from '@/api/auth'
 import type { LoginPayload, RegisterPayload } from '@/api/auth'
-import { getProfile } from '@/api/profile'
+import { getProfile, updateProfile } from '@/api/profile'
+import { guestTheme } from '@/composables/useTheme'
 import { token } from '@/lib/api'
 import type { User } from '@/types/user'
 
@@ -24,6 +25,12 @@ export const useAuthStore = defineStore('auth', () => {
 
     token.value = result.token
     user.value = result.user
+
+    if (guestTheme.value && guestTheme.value !== result.user.theme) {
+      user.value = await updateProfile({ theme: guestTheme.value }).catch(() => result.user)
+    }
+
+    guestTheme.value = null
   }
 
   async function register(payload: RegisterPayload): Promise<void> {

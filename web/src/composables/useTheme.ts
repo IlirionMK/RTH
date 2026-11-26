@@ -1,6 +1,8 @@
-import { useColorMode } from '@vueuse/core'
+import { useColorMode, useLocalStorage } from '@vueuse/core'
 
 export type Theme = 'light' | 'dark'
+
+export const guestTheme = useLocalStorage<Theme | null>('rth-guest-theme', null)
 
 export function useTheme() {
   const theme = useColorMode<Theme>({

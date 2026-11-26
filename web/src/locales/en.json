@@ -106,5 +106,14 @@
     "toLogin": "Go to log in",
     "toProfile": "Go to profile",
     "toTrips": "Go to trips"
+  },
+  "theme": {
+    "toLight": "Switch to light theme",
+    "toDark": "Switch to dark theme"
+  },
+  "effects": {
+    "label": "Animated effects",
+    "on": "Animated effects: on",
+    "off": "Animated effects: off"
   }
 }

@@ -1,8 +1,10 @@
+import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AppLayout from '@/layouts/AppLayout.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import { token } from '@/lib/api'
+import { canAnimate } from '@/lib/transitions'
 import { useAuthStore } from '@/stores/auth'
 import EmailConfirmationView from '@/views/EmailConfirmationView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -106,6 +108,30 @@ router.beforeEach(async (to) => {
   }
 
   return true
+})
+
+let finishTransition: (() => void) | null = null
+
+router.beforeResolve(async (to, from) => {
+  if (!canAnimate() || from.matched.length === 0 || to.fullPath === from.fullPath) {
+    return
+  }
+
+  await new Promise<void>((resolveNavigation) => {
+    document.startViewTransition(
+      () =>
+        new Promise<void>((resolveUpdate) => {
+          finishTransition = resolveUpdate
+          resolveNavigation()
+        }),
+    )
+  })
+})
+
+router.afterEach(async () => {
+  await nextTick()
+  finishTransition?.()
+  finishTransition = null
 })
 
 export default router

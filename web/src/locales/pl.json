@@ -106,5 +106,14 @@
     "toLogin": "Przejdź do logowania",
     "toProfile": "Przejdź do profilu",
     "toTrips": "Przejdź do podróży"
+  },
+  "theme": {
+    "toLight": "Włącz jasny motyw",
+    "toDark": "Włącz ciemny motyw"
+  },
+  "effects": {
+    "label": "Efekty animowane",
+    "on": "Efekty animowane: włączone",
+    "off": "Efekty animowane: wyłączone"
   }
 }

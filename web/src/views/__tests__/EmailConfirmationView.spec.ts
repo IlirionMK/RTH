@@ -7,6 +7,7 @@ import { confirmEmailChange, verifyEmail } from '@/api/email'
 import { getProfile } from '@/api/profile'
 import { i18n } from '@/i18n'
 import { token } from '@/lib/api'
+import { celebrate } from '@/lib/celebrate'
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
 import type { User } from '@/types/user'
@@ -14,6 +15,7 @@ import EmailConfirmationView from '@/views/EmailConfirmationView.vue'
 
 vi.mock('@/api/email')
 vi.mock('@/api/profile')
+vi.mock('@/lib/celebrate')
 
 const user: User = {
   id: 1,
@@ -72,6 +74,7 @@ describe('EmailConfirmationView', () => {
     expect(verifyEmail).toHaveBeenCalledWith(link)
     expect(wrapper.text()).toContain('Adres potwierdzony')
     expect(wrapper.find('a[href="/login"]').exists()).toBe(true)
+    expect(celebrate).toHaveBeenCalledWith(expect.any(HTMLElement), 'pon')
   })
 
   it('explains that the link is invalid or expired', async () => {

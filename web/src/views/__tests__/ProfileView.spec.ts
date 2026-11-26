@@ -5,11 +5,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { updatePassword, updateProfile } from '@/api/profile'
 import { i18n } from '@/i18n'
+import { celebrate } from '@/lib/celebrate'
 import { useAuthStore } from '@/stores/auth'
 import type { User } from '@/types/user'
 import ProfileView from '@/views/ProfileView.vue'
 
 vi.mock('@/api/profile')
+vi.mock('@/lib/celebrate')
 
 const user: User = {
   id: 1,
@@ -55,6 +57,7 @@ describe('ProfileView', () => {
 
     expect(updateProfile).toHaveBeenCalledWith({ name: 'Renamed User' })
     expect(useAuthStore().user?.name).toBe('Renamed User')
+    expect(celebrate).toHaveBeenCalledWith(expect.any(HTMLElement), 'don')
   })
 
   it('keeps the current e-mail until the new one is confirmed', async () => {
