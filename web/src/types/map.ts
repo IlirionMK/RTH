@@ -34,4 +34,5 @@ export interface Statistics {
   distance_km: number
   distance_by_transport: Record<Transport, number>
   years: number[]
+  distance_by_year: ({ year: number } & Record<Transport, number>)[]
 }

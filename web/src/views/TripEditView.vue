@@ -29,6 +29,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { type FieldErrors, validationErrors } from '@/lib/api'
 import { celebrate } from '@/lib/celebrate'
+import { useAuthStore } from '@/stores/auth'
 import type { Place, Point, Segment, Transport, Trip } from '@/types/trip'
 
 const props = defineProps<{
@@ -36,6 +37,7 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
+const auth = useAuthStore()
 const { t } = useI18n()
 
 const trip = ref<Trip | null>(null)
@@ -63,7 +65,15 @@ async function load(id: number): Promise<void> {
   state.value = 'loading'
 
   try {
-    fill(await getTrip(id))
+    const found = await getTrip(id)
+
+    if (found.user_id !== auth.user?.id) {
+      await router.replace({ name: 'trips.map', params: { id } })
+
+      return
+    }
+
+    fill(found)
     state.value = 'ready'
   } catch {
     state.value = 'error'

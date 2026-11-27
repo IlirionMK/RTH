@@ -22,6 +22,7 @@ export interface Segment {
 
 export interface Trip {
   id: number
+  user_id: number
   name: string
   starts_on: string
   ends_on: string | null

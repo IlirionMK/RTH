@@ -18,6 +18,15 @@ export function formatDistance(kilometres: number, locale: string): string {
   )
 }
 
+export function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase())
+    .join('')
+}
+
 export function countryName(code: string, locale: string): string {
   return new Intl.DisplayNames([locale], { type: 'region' }).of(code) ?? code
 }

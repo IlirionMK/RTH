@@ -1,17 +1,32 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { getTrip } from '@/api/trips'
 import { i18n } from '@/i18n'
+import { useAuthStore } from '@/stores/auth'
 import type { LineFeature, PointFeature } from '@/types/map'
 import type { Trip } from '@/types/trip'
+import type { User } from '@/types/user'
 import TripMapView from '@/views/TripMapView.vue'
+
+const user: User = {
+  id: 1,
+  name: 'Test User',
+  email: 'test@example.com',
+  pending_email: null,
+  role: 'user',
+  is_public: false,
+  locale: 'pl',
+  theme: 'light',
+}
 
 vi.mock('@/api/trips')
 vi.mock('mapbox-gl', () => ({ default: {} }))
 
 const trip: Trip = {
   id: 1,
+  user_id: 1,
   name: 'Summer Trip',
   starts_on: '2026-07-12',
   ends_on: null,
@@ -35,9 +50,12 @@ const trip: Trip = {
 }
 
 async function mountMap() {
+  const pinia = createPinia()
+  setActivePinia(pinia)
+  useAuthStore().setUser(user)
   const wrapper = mount(TripMapView, {
     props: { id: 1 },
-    global: { plugins: [i18n], stubs: { RouterLink: RouterLinkStub, TripMap: true } },
+    global: { plugins: [pinia, i18n], stubs: { RouterLink: RouterLinkStub, TripMap: true } },
   })
   await flushPromises()
 
@@ -98,6 +116,16 @@ describe('TripMapView', () => {
 
     expect(wrapper.find('[aria-live="polite"]').text()).toContain('Paris')
     expect(wrapper.find('[aria-live="polite"]').text()).toContain('Francja')
+  })
+
+  it('shows a trip of another user read only with a way back to the profile', async () => {
+    vi.mocked(getTrip).mockResolvedValue({ ...trip, user_id: 7 })
+    const wrapper = await mountMap()
+    const links = wrapper.findAllComponents(RouterLinkStub).map((link) => link.props('to'))
+
+    expect(links).toContainEqual({ name: 'discover.show', params: { id: 7 } })
+    expect(links).not.toContainEqual({ name: 'trips.edit', params: { id: 1 } })
+    expect(wrapper.text()).toContain('Profil autora')
   })
 
   it('says when the trip cannot be loaded', async () => {

@@ -31,6 +31,7 @@ const statistics: Statistics = {
   distance_km: 1690.2,
   distance_by_transport: { car: 0, plane: 1690.2, train: 0, other: 0 },
   years: [2026, 2025],
+  distance_by_year: [],
 }
 
 async function mountMap() {
