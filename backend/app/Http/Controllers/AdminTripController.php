@@ -16,6 +16,7 @@ class AdminTripController extends Controller
 
         return AdminTripResource::collection(
             Trip::query()
+                ->withSummary()
                 ->with('user:id,name,email')
                 ->when($request->filled('query'), fn (Builder $query) => $query->where(
                     fn (Builder $query) => $query->whereLike('name', $like)->orWhereHas(

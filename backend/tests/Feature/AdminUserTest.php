@@ -50,6 +50,28 @@ class AdminUserTest extends TestCase
         $this->assertEqualsCanonicalizing([$byName->id, $byEmail->id], $ids);
     }
 
+    public function test_admin_filters_accounts_by_role_and_status(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $blocked = User::factory()->blocked()->create();
+        $active = User::factory()->create();
+        Sanctum::actingAs($admin);
+
+        $this->getJson(route('admin.users.index', ['role' => 'admin']))
+            ->assertOk()
+            ->assertJsonPath('data.*.id', [$admin->id]);
+        $this->getJson(route('admin.users.index', ['status' => 'blocked']))
+            ->assertOk()
+            ->assertJsonPath('data.*.id', [$blocked->id]);
+        $this->assertEqualsCanonicalizing(
+            [$admin->id, $active->id],
+            $this->getJson(route('admin.users.index', ['status' => 'active']))->json('data.*.id'),
+        );
+        $this->getJson(route('admin.users.index', ['role' => 'owner', 'status' => 'gone']))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['role', 'status']);
+    }
+
     public function test_admin_blocks_account_and_its_sessions_end(): void
     {
         $user = User::factory()->create();

@@ -29,6 +29,16 @@ const selectedLine = ref<number | null>(null)
 const selectedPoint = ref<number | null>(null)
 
 const isOwn = computed(() => !trip.value || trip.value.user_id === auth.user?.id)
+const previous: unknown = window.history.state?.back
+const back = computed(() => {
+  if (isOwn.value) {
+    return { to: { name: 'trips.index' }, label: 'trip.back' }
+  }
+
+  return typeof previous === 'string'
+    ? { to: previous, label: 'trip.backPrevious' }
+    : { to: { name: 'discover.show', params: { id: trip.value?.user_id } }, label: 'trip.backToProfile' }
+})
 const points = computed(() => trip.value?.points ?? [])
 const segments = computed(() =>
   (trip.value?.segments ?? []).map((segment, index) => ({
@@ -98,11 +108,11 @@ onMounted(load)
   <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-3">
       <RouterLink
-        :to="isOwn ? { name: 'trips.index' } : { name: 'discover.show', params: { id: trip?.user_id } }"
+        :to="back.to"
         class="inline-flex w-fit items-center gap-1 rounded-sm text-sm text-muted-foreground hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
       >
         <ArrowLeft class="size-4" aria-hidden="true" />
-        {{ $t(isOwn ? 'trip.back' : 'trip.backToProfile') }}
+        {{ $t(back.label) }}
       </RouterLink>
       <div class="flex flex-wrap items-start justify-between gap-4">
         <header class="flex min-w-0 flex-col gap-1">
