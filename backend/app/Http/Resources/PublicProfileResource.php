@@ -19,6 +19,8 @@ class PublicProfileResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'trips_count' => $this->whenCounted('trips'),
+            'countries_count' => $this->whenHas('countries_count', fn (mixed $value): int => (int) $value),
         ];
     }
 }

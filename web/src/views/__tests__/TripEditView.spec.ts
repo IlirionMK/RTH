@@ -1,5 +1,6 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 
@@ -9,7 +10,9 @@ import { createTrip, deleteTrip, getTrip } from '@/api/trips'
 import PlaceSearch from '@/components/PlaceSearch.vue'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { i18n } from '@/i18n'
+import { useAuthStore } from '@/stores/auth'
 import type { Place, Trip } from '@/types/trip'
+import type { User } from '@/types/user'
 import TripEditView from '@/views/TripEditView.vue'
 
 const { push, replace } = vi.hoisted(() => ({
@@ -29,6 +32,7 @@ vi.mock('@/lib/celebrate')
 
 const trip: Trip = {
   id: 1,
+  user_id: 1,
   name: 'Summer Trip',
   starts_on: '2026-07-12',
   ends_on: null,
@@ -50,10 +54,25 @@ const trip: Trip = {
   ],
 }
 
+const user: User = {
+  id: 1,
+  name: 'Test User',
+  email: 'test@example.com',
+  pending_email: null,
+  role: 'user',
+  is_public: false,
+  locale: 'pl',
+  theme: 'light',
+}
+
 function mountEditor(id?: number) {
+  const pinia = createPinia()
+  setActivePinia(pinia)
+  useAuthStore().setUser(user)
+
   return mount(TooltipProvider, {
     slots: { default: () => h(TripEditView, { id }) },
-    global: { plugins: [i18n], stubs: { RouterLink: RouterLinkStub } },
+    global: { plugins: [pinia, i18n], stubs: { RouterLink: RouterLinkStub } },
     attachTo: document.body,
   })
 }
@@ -117,6 +136,15 @@ describe('TripEditView', () => {
     expect(wrapper.text()).toContain('Berlin')
     expect(wrapper.text()).toContain('Francja')
     expect(wrapper.text()).toMatch(/878\s+km/)
+  })
+
+  it('opens the map instead of the editor for a trip of another user', async () => {
+    vi.mocked(getTrip).mockResolvedValue({ ...trip, user_id: 2 })
+    const wrapper = mountEditor(1)
+    await flushPromises()
+
+    expect(replace).toHaveBeenCalledWith({ name: 'trips.map', params: { id: 1 } })
+    expect(wrapper.find('form').exists()).toBe(false)
   })
 
   it('adds a found place and reloads the trip', async () => {

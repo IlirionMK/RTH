@@ -18,7 +18,7 @@ class IndexPublicProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'query' => ['required', 'string', 'min:2', 'max:100'],
+            'query' => ['nullable', 'string', 'min:2', 'max:100'],
         ];
     }
 }

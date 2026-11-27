@@ -14,6 +14,7 @@ function point(id: number, name: string, countryCode: string): Point {
 
 const summer: Trip = {
   id: 1,
+  user_id: 1,
   name: 'Summer Trip',
   starts_on: '2026-07-12',
   ends_on: '2026-07-19',

@@ -7,11 +7,11 @@ import { getStatistics } from '@/api/statistics'
 import MapLegend from '@/components/MapLegend.vue'
 import PageHeader from '@/components/PageHeader.vue'
 import TripMap from '@/components/TripMap.vue'
+import YearFilter from '@/components/YearFilter.vue'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { countryName, formatDistance } from '@/lib/format'
 import { visitedCountryColor } from '@/lib/map'
 import type { Statistics, TripsMap } from '@/types/map'
@@ -36,15 +36,6 @@ const summary = computed(() =>
     ? t('map.summary', { trips: statistics.value.trips_count, countries: statistics.value.countries_count })
     : undefined,
 )
-
-const filter = computed({
-  get: () => (year.value === null ? 'all' : String(year.value)),
-  set: (value: unknown) => {
-    if (typeof value === 'string' && value !== '') {
-      year.value = value === 'all' ? null : Number(value)
-    }
-  },
-})
 
 async function load(): Promise<void> {
   try {
@@ -71,29 +62,7 @@ onMounted(load)
   <div class="flex flex-col gap-6">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <PageHeader :title="$t('map.title')" :description="summary" />
-      <ToggleGroup
-        v-if="statistics?.years.length"
-        v-model="filter"
-        type="single"
-        variant="outline"
-        :aria-label="$t('map.year')"
-        class="flex-wrap"
-      >
-        <ToggleGroupItem
-          value="all"
-          class="data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:hover:bg-primary/90 data-[state=on]:hover:text-primary-foreground"
-        >
-          {{ $t('map.all') }}
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          v-for="item in statistics.years"
-          :key="item"
-          :value="String(item)"
-          class="tabular-nums data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:hover:bg-primary/90 data-[state=on]:hover:text-primary-foreground"
-        >
-          {{ item }}
-        </ToggleGroupItem>
-      </ToggleGroup>
+      <YearFilter v-if="statistics?.years.length" v-model="year" :years="statistics.years" :all-label="$t('map.all')" />
     </div>
 
     <div v-if="state === 'loading'" class="grid gap-6 lg:grid-cols-[1fr_20rem]" :aria-label="$t('common.loading')" aria-busy="true">

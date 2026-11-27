@@ -48,8 +48,15 @@ const router = createRouter({
           props: (route) => ({ id: Number(route.params.id) }),
           meta: { nav: 'trips.index' },
         },
-        { path: 'stats', name: 'stats', component: PlaceholderView, props: { title: 'nav.stats' } },
-        { path: 'discover', name: 'discover', component: PlaceholderView, props: { title: 'nav.discover' } },
+        { path: 'stats', name: 'stats', component: () => import('@/views/StatsView.vue') },
+        { path: 'discover', name: 'discover', component: () => import('@/views/DiscoverView.vue') },
+        {
+          path: 'discover/:id',
+          name: 'discover.show',
+          component: () => import('@/views/PublicProfileView.vue'),
+          props: (route) => ({ id: Number(route.params.id) }),
+          meta: { nav: 'discover' },
+        },
         { path: 'profile', name: 'profile', component: ProfileView },
         {
           path: 'admin',

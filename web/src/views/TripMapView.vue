@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { countryName, formatDates, formatDistance } from '@/lib/format'
+import { useAuthStore } from '@/stores/auth'
 import type { LineFeature, PointFeature } from '@/types/map'
 import type { Trip } from '@/types/trip'
 
@@ -20,12 +21,14 @@ const props = defineProps<{
 }>()
 
 const { locale } = useI18n()
+const auth = useAuthStore()
 
 const trip = ref<Trip | null>(null)
 const state = ref<'loading' | 'error' | 'ready'>('loading')
 const selectedLine = ref<number | null>(null)
 const selectedPoint = ref<number | null>(null)
 
+const isOwn = computed(() => !trip.value || trip.value.user_id === auth.user?.id)
 const points = computed(() => trip.value?.points ?? [])
 const segments = computed(() =>
   (trip.value?.segments ?? []).map((segment, index) => ({
@@ -95,11 +98,11 @@ onMounted(load)
   <div class="flex flex-col gap-6">
     <div class="flex flex-col gap-3">
       <RouterLink
-        :to="{ name: 'trips.index' }"
+        :to="isOwn ? { name: 'trips.index' } : { name: 'discover.show', params: { id: trip?.user_id } }"
         class="inline-flex w-fit items-center gap-1 rounded-sm text-sm text-muted-foreground hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
       >
         <ArrowLeft class="size-4" aria-hidden="true" />
-        {{ $t('trip.back') }}
+        {{ $t(isOwn ? 'trip.back' : 'trip.backToProfile') }}
       </RouterLink>
       <div class="flex flex-wrap items-start justify-between gap-4">
         <header class="flex min-w-0 flex-col gap-1">
@@ -108,7 +111,7 @@ onMounted(load)
           </h1>
           <p class="text-pretty text-muted-foreground tabular-nums">{{ summary }}</p>
         </header>
-        <Button variant="outline" as-child>
+        <Button v-if="isOwn" variant="outline" as-child>
           <RouterLink :to="{ name: 'trips.edit', params: { id } }">
             <Pencil aria-hidden="true" />
             {{ $t('trip.edit') }}
