@@ -66,6 +66,40 @@ class ApiDocumentationTest extends TestCase
             ->assertJsonPath('components.schemas.Transport.enum', ['car', 'plane', 'train', 'other']);
     }
 
+    public function test_every_endpoint_has_title_description_and_section(): void
+    {
+        $document = $this->getJson('/docs/api.json')->json();
+        $sections = array_column($document['tags'], 'description', 'name');
+
+        foreach ($document['paths'] as $path => $operations) {
+            foreach ($operations as $method => $operation) {
+                $endpoint = strtoupper($method).' '.$path;
+                $this->assertNotEmpty($operation['summary'] ?? null, "{$endpoint} has no title");
+                $this->assertNotEmpty($operation['description'] ?? null, "{$endpoint} has no description");
+                $this->assertCount(1, $operation['tags'] ?? [], "{$endpoint} has no section");
+                $this->assertNotEmpty($sections[$operation['tags'][0]] ?? null, "{$endpoint} section is not described");
+                $this->assertContains('Accept-Language', array_column($operation['parameters'] ?? [], 'name'), "{$endpoint} has no language header");
+
+                foreach ($operation['parameters'] ?? [] as $parameter) {
+                    $this->assertNotEmpty($parameter['description'] ?? null, "{$endpoint} parameter {$parameter['name']} has no description");
+                }
+            }
+        }
+    }
+
+    public function test_documentation_explains_usage_license_and_pages(): void
+    {
+        $response = $this->getJson('/docs/api.json')
+            ->assertJsonPath('info.license', ['name' => 'MIT', 'identifier' => 'MIT'])
+            ->assertJsonPath('info.contact.url', 'https://github.com/IlirionMK/RTH')
+            ->assertSee('Authorization: Bearer')
+            ->assertSee('Accept-Language: pl');
+
+        foreach (['/trips', '/public-profiles', '/public-profiles/{user}/trips', '/admin/users', '/admin/trips'] as $list) {
+            $this->assertContains('page', $response->json("paths.{$list}.get.parameters.*.name"), "{$list} has no page parameter");
+        }
+    }
+
     public function test_language_and_theme_are_documented_as_enums(): void
     {
         $this->getJson('/docs/api.json')

@@ -19,7 +19,6 @@ class SystemStatisticsResource extends JsonResource
         return [
             'users_count' => $this->usersCount,
             'trips_count' => $this->tripsCount,
-            /** @var list<array{month: string, users: int, trips: int}> */
             'months' => $this->months,
         ];
     }

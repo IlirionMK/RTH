@@ -24,7 +24,6 @@ class StatisticsResource extends JsonResource
             'distance_km' => $this->distanceKm,
             /** @var array{car: float, plane: float, train: float, other: float} */
             'distance_by_transport' => $this->distanceByTransport,
-            /** @var list<int> */
             'years' => $this->years,
             /** @var list<array{year: int, car: float, plane: float, train: float, other: float}> */
             'distance_by_year' => $this->distanceByYear,
