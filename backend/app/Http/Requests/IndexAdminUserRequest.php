@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Role;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class IndexAdminUserRequest extends FormRequest
 {
@@ -19,6 +21,8 @@ class IndexAdminUserRequest extends FormRequest
     {
         return [
             'query' => ['nullable', 'string', 'max:100'],
+            'role' => ['nullable', Rule::enum(Role::class)],
+            'status' => ['nullable', Rule::in(['active', 'blocked'])],
         ];
     }
 }

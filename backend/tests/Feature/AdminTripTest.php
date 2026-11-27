@@ -31,6 +31,19 @@ class AdminTripTest extends TestCase
             ->assertJsonPath('meta.total', 2);
     }
 
+    public function test_admin_sees_countries_and_distance_of_each_trip(): void
+    {
+        $segment = Segment::factory()->create(['distance_km' => 877.5]);
+        $segment->fromPoint->update(['country_code' => 'DE']);
+        $segment->toPoint->update(['country_code' => 'FR']);
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $this->getJson(route('admin.trips.index'))
+            ->assertOk()
+            ->assertJsonPath('data.0.distance_km', 877.5)
+            ->assertJsonPath('data.0.countries', ['DE', 'FR']);
+    }
+
     public function test_admin_finds_trips_by_name_or_author(): void
     {
         $byName = Trip::factory()->create(['name' => 'Summer in Rome']);

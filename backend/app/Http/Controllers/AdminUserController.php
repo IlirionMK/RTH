@@ -23,6 +23,9 @@ class AdminUserController extends Controller
                 ->when($request->filled('query'), fn (Builder $query) => $query->where(
                     fn (Builder $query) => $query->whereLike('name', $like)->orWhereLike('email', $like),
                 ))
+                ->when($request->filled('role'), fn (Builder $query) => $query->where('role', $request->string('role')->value()))
+                ->when($request->input('status') === 'active', fn (Builder $query) => $query->whereNull('blocked_at'))
+                ->when($request->input('status') === 'blocked', fn (Builder $query) => $query->whereNotNull('blocked_at'))
                 ->latest()
                 ->latest('id')
                 ->paginate(),
