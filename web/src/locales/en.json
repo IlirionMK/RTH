@@ -206,7 +206,7 @@
     "noSegments": "Add at least two places to see segments.",
     "transport": "Transport",
     "distance": "Distance",
-    "approximate": "No road was found, so the segment is a straight line.",
+    "approximate": "No route was found, so the segment is a straight line.",
     "countries": "Visited countries · {count}",
     "noCountries": "No visited countries.",
     "legend": "Legend",

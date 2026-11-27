@@ -18,7 +18,10 @@ class DatabaseSeederTest extends TestCase
 
     public function test_seeder_fills_accounts_and_trips_to_look_at(): void
     {
-        Http::fake(['api.heigit.org/openrouteservice/*' => Http::response(status: 500)]);
+        Http::fake([
+            'api.heigit.org/openrouteservice/*' => Http::response(status: 500),
+            'brouter.de/*' => Http::response(status: 500),
+        ]);
         Sleep::fake();
 
         $this->seed();

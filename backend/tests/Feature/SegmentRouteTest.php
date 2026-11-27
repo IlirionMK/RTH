@@ -116,16 +116,54 @@ class SegmentRouteTest extends TestCase
         $this->assertEqualsWithDelta(-118.2437 + 360, end($longitudes), 0.000001);
     }
 
-    public function test_train_segment_is_straight_line(): void
+    public function test_train_segment_follows_rails(): void
     {
-        Http::fake(['api.heigit.org/openrouteservice/*' => Http::response(status: 500)]);
+        Http::fake([
+            'api.heigit.org/openrouteservice/*' => Http::response(status: 500),
+            'brouter.de/*' => Http::response($this->rail()),
+        ]);
+        $segment = $this->tripWith([self::BERLIN, self::PARIS])->segments()->sole();
+
+        $this->patchJson(route('segments.update', $segment), ['transport' => 'train'])
+            ->assertOk()
+            ->assertJsonPath('data.geometry.coordinates', [[13.405, 52.52], [9.7332, 52.3759], [2.3522, 48.8566]])
+            ->assertJsonPath('data.distance_km', 1096.4)
+            ->assertJsonPath('data.is_approximate', false);
+        Http::assertSent(fn (Request $request): bool => str_contains($request->url(), 'brouter.de/brouter')
+            && $request['lonlats'] === '13.405,52.52|2.3522,48.8566'
+            && $request['profile'] === 'rail'
+            && $request['format'] === 'geojson');
+    }
+
+    public function test_train_segment_is_approximate_straight_line_when_no_rail_is_found(): void
+    {
+        Http::fake([
+            'api.heigit.org/openrouteservice/*' => Http::response(status: 500),
+            'brouter.de/*' => Http::response('from-position not mapped in existing datafile', 400),
+        ]);
         $segment = $this->tripWith([self::BERLIN, self::PARIS])->segments()->sole();
 
         $this->patchJson(route('segments.update', $segment), ['transport' => 'train'])
             ->assertOk()
             ->assertJsonPath('data.geometry.coordinates', [[13.405, 52.52], [2.3522, 48.8566]])
             ->assertJsonPath('data.distance_km', 877.5)
-            ->assertJsonPath('data.is_approximate', false);
+            ->assertJsonPath('data.is_approximate', true);
+    }
+
+    public function test_command_draws_train_segments_along_rails(): void
+    {
+        Http::fake(['brouter.de/*' => Http::response($this->rail())]);
+        $train = Segment::factory()->create(['transport' => 'train']);
+        $car = Segment::factory()->create(['transport' => 'car']);
+
+        $this->artisan('app:reroute-trains')
+            ->expectsOutput('Train segments on rails: 1 of 1.')
+            ->assertSuccessful();
+
+        $this->assertSame(1096.4, $train->refresh()->distance_km);
+        $this->assertCount(3, $train->geometry['coordinates']);
+        $this->assertSame(877.5, $car->refresh()->distance_km);
+        Http::assertSentCount(1);
     }
 
     public function test_moved_point_redraws_its_segments(): void
@@ -188,6 +226,24 @@ class SegmentRouteTest extends TestCase
             'features' => [[
                 'geometry' => ['type' => 'LineString', 'coordinates' => $coordinates],
                 'properties' => ['summary' => ['distance' => 1054321.0]],
+            ]],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function rail(): array
+    {
+        return [
+            'type' => 'FeatureCollection',
+            'features' => [[
+                'type' => 'Feature',
+                'properties' => ['track-length' => '1096421'],
+                'geometry' => [
+                    'type' => 'LineString',
+                    'coordinates' => [[13.405, 52.52, 34.0], [9.7332, 52.3759, 55.25], [2.3522, 48.8566, 35.5]],
+                ],
             ]],
         ];
     }

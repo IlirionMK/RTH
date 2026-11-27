@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'brouter' => [
+        'url' => 'https://brouter.de',
+    ],
+
     'openrouteservice' => [
         'key' => env('ORS_KEY', ''),
         'url' => 'https://api.heigit.org',

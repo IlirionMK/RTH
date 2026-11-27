@@ -4,9 +4,6 @@ namespace App\Actions;
 
 use App\Enums\Transport;
 use App\Models\Segment;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class RouteSegment
 {
@@ -16,54 +13,34 @@ class RouteSegment
 
     private const MAP_TOLERANCE_DEGREES = 0.005;
 
+    public function __construct(
+        private FindRoadRoute $findRoadRoute,
+        private FindRailRoute $findRailRoute,
+    ) {}
+
     public function handle(Segment $segment): void
     {
         $from = [$segment->fromPoint->longitude, $segment->fromPoint->latitude];
         $to = [$segment->toPoint->longitude, $segment->toPoint->latitude];
-        $road = $segment->transport === Transport::Car ? $this->road($from, $to) : null;
+        $route = match ($segment->transport) {
+            Transport::Car => $this->findRoadRoute->handle($from, $to),
+            Transport::Train => $this->findRailRoute->handle($from, $to),
+            default => null,
+        };
 
         $coordinates = match (true) {
-            $road !== null => $road['coordinates'],
+            $route !== null => $route['coordinates'],
             $segment->transport === Transport::Plane => $this->arc($from, $to),
             default => [$from, $to],
         };
-        $distance = $road['distance_km'] ?? self::EARTH_RADIUS_KM * $this->angle($from, $to);
+        $distance = $route['distance_km'] ?? self::EARTH_RADIUS_KM * $this->angle($from, $to);
 
         $segment->fill([
             'geometry' => ['type' => 'LineString', 'coordinates' => $coordinates],
             'map_geometry' => ['type' => 'LineString', 'coordinates' => $this->simplify($coordinates)],
             'distance_km' => round($distance, 1),
-            'is_approximate' => $segment->transport === Transport::Car && $road === null,
+            'is_approximate' => in_array($segment->transport, [Transport::Car, Transport::Train], true) && $route === null,
         ])->save();
-    }
-
-    /**
-     * @param  array{float, float}  $from
-     * @param  array{float, float}  $to
-     * @return array{coordinates: array<mixed>, distance_km: float}|null
-     */
-    private function road(array $from, array $to): ?array
-    {
-        return Cache::remember('roads:'.implode(',', [...$from, ...$to]), now()->addDays(30), function () use ($from, $to): ?array {
-            try {
-                $response = Http::withHeaders(['Authorization' => config()->string('services.openrouteservice.key')])
-                    ->timeout(5)
-                    ->post(config()->string('services.openrouteservice.url').'/openrouteservice/v2/directions/driving-car/geojson', [
-                        'coordinates' => [$from, $to],
-                    ]);
-            } catch (ConnectionException) {
-                return null;
-            }
-
-            $coordinates = $response->json('features.0.geometry.coordinates');
-            $meters = $response->json('features.0.properties.summary.distance');
-
-            if ($response->failed() || ! is_array($coordinates) || ! is_numeric($meters)) {
-                return null;
-            }
-
-            return ['coordinates' => $coordinates, 'distance_km' => (float) $meters / 1000];
-        });
     }
 
     /**

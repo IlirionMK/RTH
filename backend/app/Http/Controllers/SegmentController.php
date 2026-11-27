@@ -14,7 +14,7 @@ class SegmentController extends Controller
 {
     #[Endpoint(
         title: 'Change transport',
-        description: 'Sets the transport of the segment and draws its route again: car by road, plane as an arc, train and other as a straight line.',
+        description: 'Sets the transport of the segment and draws its route again: car by road, train by rail, plane as an arc, other as a straight line. A car or train without a found route gets a straight line marked as approximate.',
         method: 'PATCH',
     )]
     public function update(

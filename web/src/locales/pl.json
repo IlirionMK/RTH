@@ -206,7 +206,7 @@
     "noSegments": "Dodaj co najmniej dwa miejsca, aby zobaczyć odcinki.",
     "transport": "Środek transportu",
     "distance": "Dystans",
-    "approximate": "Nie znaleziono drogi, odcinek pokazano w linii prostej.",
+    "approximate": "Nie znaleziono trasy, odcinek pokazano w linii prostej.",
     "countries": "Odwiedzone państwa · {count}",
     "noCountries": "Brak odwiedzonych państw.",
     "legend": "Legenda",
