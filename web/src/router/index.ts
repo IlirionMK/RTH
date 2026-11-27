@@ -8,7 +8,6 @@ import { canAnimate } from '@/lib/transitions'
 import { useAuthStore } from '@/stores/auth'
 import EmailConfirmationView from '@/views/EmailConfirmationView.vue'
 import LoginView from '@/views/LoginView.vue'
-import PlaceholderView from '@/views/PlaceholderView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import TripsView from '@/views/TripsView.vue'
@@ -62,9 +61,9 @@ const router = createRouter({
           path: 'admin',
           meta: { admin: true },
           children: [
-            { path: '', name: 'admin.dashboard', component: PlaceholderView, props: { title: 'nav.dashboard' } },
-            { path: 'users', name: 'admin.users', component: PlaceholderView, props: { title: 'nav.users' } },
-            { path: 'trips', name: 'admin.trips', component: PlaceholderView, props: { title: 'nav.userTrips' } },
+            { path: '', name: 'admin.dashboard', component: () => import('@/views/AdminDashboardView.vue') },
+            { path: 'users', name: 'admin.users', component: () => import('@/views/AdminUsersView.vue') },
+            { path: 'trips', name: 'admin.trips', component: () => import('@/views/AdminTripsView.vue') },
           ],
         },
       ],
