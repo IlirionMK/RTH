@@ -142,8 +142,7 @@
     "trip": "Podróż",
     "author": "Autor",
     "dates": "Daty",
-    "openMap": "Otwórz na mapie",
-    "pickTrip": "Wybierz podróż z listy, aby zobaczyć szczegóły.",
+    "deleteTrip": "Usuń podróż {name}",
     "tripDeleted": "Usunięto podróż: {name}.",
     "deleteTripDescription": "Podróż {name} użytkownika {author} zniknie razem z miejscami i odcinkami. Tego nie da się cofnąć."
   },

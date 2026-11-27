@@ -142,8 +142,7 @@
     "trip": "Trip",
     "author": "Author",
     "dates": "Dates",
-    "openMap": "Open on the map",
-    "pickTrip": "Choose a trip in the list to see its details.",
+    "deleteTrip": "Delete the trip {name}",
     "tripDeleted": "Trip deleted: {name}.",
     "deleteTripDescription": "The trip {name} by {author} will disappear with its places and segments. You cannot undo this."
   },
