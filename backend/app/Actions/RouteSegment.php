@@ -4,11 +4,10 @@ namespace App\Actions;
 
 use App\Enums\Transport;
 use App\Models\Segment;
+use App\Support\GreatCircle;
 
 class RouteSegment
 {
-    private const EARTH_RADIUS_KM = 6371.0088;
-
     private const ARC_STEPS = 64;
 
     private const MAP_TOLERANCE_DEGREES = 0.005;
@@ -33,7 +32,7 @@ class RouteSegment
             $segment->transport === Transport::Plane => $this->arc($from, $to),
             default => [$from, $to],
         };
-        $distance = $route['distance_km'] ?? self::EARTH_RADIUS_KM * $this->angle($from, $to);
+        $distance = $route['distance_km'] ?? GreatCircle::lengthKm([$from, $to]);
 
         $segment->fill([
             'geometry' => ['type' => 'LineString', 'coordinates' => $coordinates],
@@ -50,7 +49,7 @@ class RouteSegment
      */
     private function arc(array $from, array $to): array
     {
-        $angle = $this->angle($from, $to);
+        $angle = GreatCircle::angle($from, $to);
 
         if ($angle === 0.0) {
             return [$from, $to];
@@ -74,19 +73,6 @@ class RouteSegment
         }
 
         return $coordinates;
-    }
-
-    /**
-     * @param  array{float, float}  $from
-     * @param  array{float, float}  $to
-     */
-    private function angle(array $from, array $to): float
-    {
-        [$longitude1, $latitude1, $longitude2, $latitude2] = array_map(deg2rad(...), [...$from, ...$to]);
-        $haversine = sin(($latitude2 - $latitude1) / 2) ** 2
-            + cos($latitude1) * cos($latitude2) * sin(($longitude2 - $longitude1) / 2) ** 2;
-
-        return 2 * asin(min(1.0, sqrt($haversine)));
     }
 
     /**

@@ -14,10 +14,6 @@ return [
     |
     */
 
-    'brouter' => [
-        'url' => 'https://brouter.de',
-    ],
-
     'openrouteservice' => [
         'key' => env('ORS_KEY', ''),
         'url' => 'https://api.heigit.org',
@@ -42,6 +38,10 @@ return [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
+    ],
+
+    'transitous' => [
+        'url' => 'https://api.transitous.org',
     ],
 
 ];

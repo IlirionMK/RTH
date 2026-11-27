@@ -20,7 +20,7 @@ class DatabaseSeederTest extends TestCase
     {
         Http::fake([
             'api.heigit.org/openrouteservice/*' => Http::response(status: 500),
-            'brouter.de/*' => Http::response(status: 500),
+            'api.transitous.org/*' => Http::response(status: 500),
         ]);
         Sleep::fake();
 

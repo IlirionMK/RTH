@@ -48,3 +48,5 @@ Lists return 15 items. The answer has `links` with the next and previous pages a
 ## Maps
 
 Lines are GeoJSON `LineString` with `[longitude, latitude]` pairs. A trip shows the full line of each segment. The map of all trips uses a simplified line (about 500 m precision). Country codes are ISO 3166-1 alpha-2.
+
+Car lines come from [openrouteservice](https://openrouteservice.org). Train lines follow real passenger trains from [Transitous](https://transitous.org) timetables ([data sources](https://transitous.org/sources/)).
