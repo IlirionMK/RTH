@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+#[QueryParameter('year', description: 'Only trips that started in this year.')]
 class ShowMapRequest extends FormRequest
 {
     public function authorize(): bool

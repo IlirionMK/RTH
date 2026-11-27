@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+#[QueryParameter('query', description: 'Name of the place, at least 2 letters.')]
 class IndexPlaceRequest extends FormRequest
 {
     public function authorize(): bool
