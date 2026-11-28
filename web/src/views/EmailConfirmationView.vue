@@ -70,7 +70,7 @@ onMounted(async () => {
   <Card>
     <CardHeader v-if="status === 'loading'" class="justify-items-center text-center">
       <Spinner class="mb-2 size-6" :aria-label="$t('common.loading')" />
-      <CardTitle class="text-xl">{{ $t('emailConfirmation.loading') }}</CardTitle>
+      <CardTitle class="text-xl"><h1>{{ $t('emailConfirmation.loading') }}</h1></CardTitle>
     </CardHeader>
     <template v-else>
       <CardHeader>
@@ -78,7 +78,7 @@ onMounted(async () => {
           <CircleCheck class="size-8 text-muted-foreground" aria-hidden="true" />
         </span>
         <TriangleAlert v-else class="mb-2 size-8 text-destructive" aria-hidden="true" />
-        <CardTitle class="text-xl">{{ $t(`${message}.title`) }}</CardTitle>
+        <CardTitle class="text-xl"><h1>{{ $t(`${message}.title`) }}</h1></CardTitle>
         <CardDescription class="text-pretty">{{ $t(`${message}.description`) }}</CardDescription>
       </CardHeader>
       <CardContent>

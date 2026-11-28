@@ -268,7 +268,7 @@ watch(locale, (language) => map?.setLanguage(language))
 
 <template>
   <div class="relative h-[60svh] min-h-80 overflow-hidden rounded-xl border bg-muted">
-    <div v-if="token" ref="container" role="region" :aria-label="label" class="size-full" />
+    <div v-if="token" ref="container" class="size-full" />
     <Alert v-else class="m-4 w-auto">
       <AlertDescription>{{ $t('map.noToken') }}</AlertDescription>
     </Alert>

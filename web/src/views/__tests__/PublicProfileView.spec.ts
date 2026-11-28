@@ -7,6 +7,7 @@ import {
   getPublicProfileStatistics,
   listPublicProfileTrips,
 } from '@/api/publicProfiles'
+import { axeViolations } from '@/__tests__/axe'
 import { i18n } from '@/i18n'
 import type { Statistics, TripsMap } from '@/types/map'
 import type { Trip } from '@/types/trip'
@@ -77,6 +78,13 @@ describe('PublicProfileView', () => {
       params: { id: 5 },
     })
     expect(wrapper.find('form').exists()).toBe(false)
+  })
+
+  it('has no accessibility errors', async () => {
+    mockProfile()
+    const wrapper = await mountProfile()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('loads the statistics and map of the chosen year', async () => {

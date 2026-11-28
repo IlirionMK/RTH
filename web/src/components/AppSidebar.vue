@@ -59,66 +59,68 @@ watch(() => route.fullPath, () => setOpenMobile(false))
 
 <template>
   <Sidebar class="[view-transition-name:sidebar]">
-    <SidebarHeader class="px-4 py-3">
-      <AppLogo />
-    </SidebarHeader>
+    <nav :aria-label="$t('nav.label')" class="flex min-h-0 flex-1 flex-col">
+      <SidebarHeader class="px-4 py-3">
+        <AppLogo />
+      </SidebarHeader>
 
-    <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem v-for="item in mainItems" :key="item.name">
-              <SidebarMenuButton as-child :is-active="activeName === item.name" class="data-active:[view-transition-name:nav-active]">
-                <RouterLink :to="{ name: item.name }">
-                  <component :is="item.icon" aria-hidden="true" />
-                  <span>{{ $t(item.label) }}</span>
-                </RouterLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem v-for="item in mainItems" :key="item.name">
+                <SidebarMenuButton as-child :is-active="activeName === item.name" class="data-active:[view-transition-name:nav-active]">
+                  <RouterLink :to="{ name: item.name }">
+                    <component :is="item.icon" aria-hidden="true" />
+                    <span>{{ $t(item.label) }}</span>
+                  </RouterLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-      <SidebarGroup v-if="auth.isAdmin">
-        <SidebarGroupLabel>{{ $t('nav.admin') }}</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem v-for="item in adminItems" :key="item.name">
-              <SidebarMenuButton as-child :is-active="activeName === item.name" class="data-active:[view-transition-name:nav-active]">
-                <RouterLink :to="{ name: item.name }">
-                  <component :is="item.icon" aria-hidden="true" />
-                  <span>{{ $t(item.label) }}</span>
-                </RouterLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
+        <SidebarGroup v-if="auth.isAdmin">
+          <SidebarGroupLabel>{{ $t('nav.admin') }}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem v-for="item in adminItems" :key="item.name">
+                <SidebarMenuButton as-child :is-active="activeName === item.name" class="data-active:[view-transition-name:nav-active]">
+                  <RouterLink :to="{ name: item.name }">
+                    <component :is="item.icon" aria-hidden="true" />
+                    <span>{{ $t(item.label) }}</span>
+                  </RouterLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-    <SidebarFooter>
-      <div class="flex items-center gap-1 border-t border-sidebar-border px-1 pt-2">
-        <EffectsToggle />
-        <ThemeToggle />
-        <LocaleToggle />
-      </div>
-      <div class="flex items-center gap-2 px-2">
-        <Avatar>
-          <AvatarFallback>{{ initials }}</AvatarFallback>
-        </Avatar>
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-medium">{{ auth.user?.name }}</p>
-          <p class="truncate text-xs text-muted-foreground">{{ auth.user?.email }}</p>
+      <SidebarFooter>
+        <div class="flex items-center gap-1 border-t border-sidebar-border px-1 pt-2">
+          <EffectsToggle />
+          <ThemeToggle />
+          <LocaleToggle />
         </div>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <Button variant="ghost" size="icon" :aria-label="$t('nav.logout')" @click="auth.logout()">
-              <LogOut aria-hidden="true" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{{ $t('nav.logout') }}</TooltipContent>
-        </Tooltip>
-      </div>
-    </SidebarFooter>
+        <div class="flex items-center gap-2 px-2">
+          <Avatar>
+            <AvatarFallback>{{ initials }}</AvatarFallback>
+          </Avatar>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium">{{ auth.user?.name }}</p>
+            <p class="truncate text-xs text-muted-foreground">{{ auth.user?.email }}</p>
+          </div>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button variant="ghost" size="icon" :aria-label="$t('nav.logout')" @click="auth.logout()">
+                <LogOut aria-hidden="true" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{{ $t('nav.logout') }}</TooltipContent>
+          </Tooltip>
+        </div>
+      </SidebarFooter>
+    </nav>
   </Sidebar>
 </template>

@@ -1,6 +1,7 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { getStatistics } from '@/api/statistics'
 import { i18n } from '@/i18n'
 import type { Statistics } from '@/types/map'
@@ -47,6 +48,13 @@ describe('StatsView', () => {
     expect(text).toMatch(/Samolot\s*8\s?560\s+km/)
     expect(text).toContain('Hiszpania')
     expect(text).toContain('Niemcy')
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.mocked(getStatistics).mockResolvedValue(statistics)
+    const wrapper = await mountStats()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('keeps a table with the distance of each year for screen readers', async () => {

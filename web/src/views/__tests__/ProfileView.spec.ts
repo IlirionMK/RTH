@@ -3,6 +3,7 @@ import { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { updatePassword, updateProfile } from '@/api/profile'
 import { i18n } from '@/i18n'
 import { celebrate } from '@/lib/celebrate'
@@ -45,6 +46,12 @@ describe('ProfileView', () => {
 
     expect((wrapper.find('#name').element as HTMLInputElement).value).toBe('Test User')
     expect((wrapper.find('#email').element as HTMLInputElement).value).toBe('test@example.com')
+  })
+
+  it('has no accessibility errors', async () => {
+    const wrapper = mountProfile()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('saves the new name without touching the e-mail', async () => {

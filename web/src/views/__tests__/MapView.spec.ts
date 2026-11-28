@@ -1,6 +1,7 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { getMap } from '@/api/map'
 import { getStatistics } from '@/api/statistics'
 import { i18n } from '@/i18n'
@@ -65,6 +66,14 @@ describe('MapView', () => {
       expect.arrayContaining(['Wszystkie', '2026', '2025']),
     )
     expect(wrapper.findComponent({ name: 'TripMap' }).props('countries')).toEqual(['ES', 'DE'])
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.mocked(getMap).mockResolvedValue(tripsMap)
+    vi.mocked(getStatistics).mockResolvedValue(statistics)
+    const wrapper = await mountMap()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('loads the routes and countries of the chosen year', async () => {

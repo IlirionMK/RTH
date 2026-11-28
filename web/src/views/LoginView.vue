@@ -44,7 +44,7 @@ async function submit(): Promise<void> {
 <template>
   <Card>
     <CardHeader>
-      <CardTitle class="text-xl">{{ $t('login.title') }}</CardTitle>
+      <CardTitle class="text-xl"><h1>{{ $t('login.title') }}</h1></CardTitle>
       <CardDescription>{{ $t('login.description') }}</CardDescription>
     </CardHeader>
     <CardContent>

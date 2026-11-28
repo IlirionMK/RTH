@@ -3,6 +3,7 @@ import { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { confirmEmailChange, verifyEmail } from '@/api/email'
 import { getProfile } from '@/api/profile'
 import { i18n } from '@/i18n'
@@ -75,6 +76,13 @@ describe('EmailConfirmationView', () => {
     expect(wrapper.text()).toContain('Adres potwierdzony')
     expect(wrapper.find('a[href="/login"]').exists()).toBe(true)
     expect(celebrate).toHaveBeenCalledWith(expect.any(HTMLElement), 'pon')
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.mocked(verifyEmail).mockResolvedValue()
+    const wrapper = await mountConfirmation('email-verification')
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('explains that the link is invalid or expired', async () => {

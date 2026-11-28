@@ -1,6 +1,7 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { listAdminTrips } from '@/api/admin'
 import { deleteTrip } from '@/api/trips'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -59,6 +60,14 @@ describe('AdminTripsView', () => {
     expect(wrapper.text()).toContain('test@example.com')
     expect(wrapper.text()).toContain('Niemcy, Hiszpania')
     expect(wrapper.text()).toMatch(/1\s?690\s+km/)
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.useRealTimers()
+    mockTrips()
+    const wrapper = await mountTrips()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('opens the trip map from its row', async () => {

@@ -73,11 +73,9 @@ onMounted(load)
 
     <template v-else-if="statistics">
       <dl class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Card v-for="tile in tiles" :key="tile.label" class="py-4">
-          <CardContent class="flex flex-col gap-1">
-            <dt class="text-sm text-muted-foreground">{{ tile.label }}</dt>
-            <dd class="text-3xl font-semibold tabular-nums">{{ tile.value }}</dd>
-          </CardContent>
+        <Card v-for="tile in tiles" :key="tile.label" class="gap-1 p-4">
+          <dt class="text-sm text-muted-foreground">{{ tile.label }}</dt>
+          <dd class="text-3xl font-semibold tabular-nums">{{ tile.value }}</dd>
         </Card>
       </dl>
 
@@ -102,7 +100,7 @@ onMounted(load)
           </RouterLink>
         </CardHeader>
         <CardContent>
-          <Table>
+          <Table :label="$t('admin.recentUsers')">
             <TableHeader>
               <TableRow>
                 <TableHead>{{ $t('admin.name') }}</TableHead>

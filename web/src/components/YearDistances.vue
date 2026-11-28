@@ -68,22 +68,24 @@ const detail = computed(() => {
         {{ $t(`transport.${transport}`) }}
       </li>
     </ul>
-    <table class="sr-only">
-      <caption>{{ $t('stats.byYear') }}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{{ $t('stats.year') }}</th>
-          <th v-for="transport in transports" :key="transport" scope="col">{{ $t(`transport.${transport}`) }}</th>
-          <th scope="col">{{ $t('stats.total') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in years" :key="row.year">
-          <th scope="row">{{ row.year }}</th>
-          <td v-for="transport in transports" :key="transport">{{ formatDistance(row[transport], locale) }}</td>
-          <td>{{ formatDistance(columns[index]?.total ?? 0, locale) }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="sr-only">
+      <table>
+        <caption>{{ $t('stats.byYear') }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ $t('stats.year') }}</th>
+            <th v-for="transport in transports" :key="transport" scope="col">{{ $t(`transport.${transport}`) }}</th>
+            <th scope="col">{{ $t('stats.total') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in years" :key="row.year">
+            <th scope="row">{{ row.year }}</th>
+            <td v-for="transport in transports" :key="transport">{{ formatDistance(row[transport], locale) }}</td>
+            <td>{{ formatDistance(columns[index]?.total ?? 0, locale) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>

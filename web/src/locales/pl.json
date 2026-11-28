@@ -4,6 +4,7 @@
     "loading": "Ładowanie"
   },
   "nav": {
+    "label": "Menu główne",
     "openMenu": "Otwórz menu",
     "trips": "Podróże",
     "map": "Mapa",

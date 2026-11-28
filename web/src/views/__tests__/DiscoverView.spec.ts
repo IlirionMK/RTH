@@ -1,6 +1,7 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { listPublicProfiles } from '@/api/publicProfiles'
 import { i18n } from '@/i18n'
 import type { PublicProfile } from '@/types/profile'
@@ -43,6 +44,14 @@ describe('DiscoverView', () => {
     expect(wrapper.text()).toContain('AT')
     expect(wrapper.text()).toContain('Podróże: 12 · Państwa: 9')
     expect(wrapper.findComponent(RouterLinkStub).props('to')).toEqual({ name: 'discover.show', params: { id: 3 } })
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.useRealTimers()
+    vi.mocked(listPublicProfiles).mockResolvedValue(page([anna]))
+    const wrapper = await mountDiscover()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('searches after two letters and a pause in typing', async () => {
