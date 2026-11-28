@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { listAdminTrips } from '@/api/admin'
 import { deleteTrip } from '@/api/trips'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { i18n } from '@/i18n'
 import type { AdminTrip } from '@/types/admin'
 import AdminTripsView from '@/views/AdminTripsView.vue'
@@ -26,7 +27,8 @@ function mockTrips(): void {
 }
 
 async function mountTrips() {
-  const wrapper = mount(AdminTripsView, {
+  const wrapper = mount(TooltipProvider, {
+    slots: { default: AdminTripsView },
     global: { plugins: [i18n], stubs: { RouterLink: RouterLinkStub } },
     attachTo: document.body,
   })
@@ -54,26 +56,26 @@ describe('AdminTripsView', () => {
     expect(listAdminTrips).toHaveBeenCalledWith('', 1)
     expect(wrapper.text()).toContain('Summer Trip')
     expect(wrapper.text()).toContain('Test User')
+    expect(wrapper.text()).toContain('test@example.com')
     expect(wrapper.text()).toContain('Niemcy, Hiszpania')
     expect(wrapper.text()).toMatch(/1\s?690\s+km/)
   })
 
-  it('shows the chosen trip with a link to its map', async () => {
+  it('opens the trip map from its row', async () => {
     mockTrips()
     const wrapper = await mountTrips()
 
-    await wrapper.find('button[aria-pressed]').trigger('click')
+    const link = wrapper.findComponent(RouterLinkStub)
 
-    expect(wrapper.find('[aria-live="polite"]').text()).toContain('test@example.com')
-    expect(wrapper.findComponent(RouterLinkStub).props('to')).toEqual({ name: 'trips.map', params: { id: 5 } })
+    expect(link.props('to')).toEqual({ name: 'trips.map', params: { id: 5 } })
+    expect(link.text()).toContain('Summer Trip')
   })
 
-  it('deletes the chosen trip only after confirmation', async () => {
+  it('deletes a trip only after confirmation', async () => {
     mockTrips()
     const wrapper = await mountTrips()
-    await wrapper.find('button[aria-pressed]').trigger('click')
 
-    await wrapper.findAll('button').find((item) => item.text() === 'Usuń podróż')?.trigger('click')
+    await wrapper.find('button[aria-label="Usuń podróż Summer Trip"]').trigger('click')
     await flushPromises()
     expect(deleteTrip).not.toHaveBeenCalled()
 

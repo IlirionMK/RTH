@@ -222,7 +222,10 @@ onMounted(() => {
     container: container.value,
     style: styleUrl(),
     language: locale.value,
-    customAttribution: '© openrouteservice.org by HeiGIT',
+    customAttribution: [
+      '© openrouteservice.org by HeiGIT',
+      '<a href="https://transitous.org/sources/" target="_blank" rel="noopener">Transitous</a>',
+    ],
     locale: { 'NavigationControl.ZoomIn': t('map.zoomIn'), 'NavigationControl.ZoomOut': t('map.zoomOut') },
   })
   map.getCanvas().setAttribute('aria-label', props.label)

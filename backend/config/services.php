@@ -40,4 +40,8 @@ return [
         ],
     ],
 
+    'transitous' => [
+        'url' => 'https://api.transitous.org',
+    ],
+
 ];

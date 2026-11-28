@@ -116,16 +116,58 @@ class SegmentRouteTest extends TestCase
         $this->assertEqualsWithDelta(-118.2437 + 360, end($longitudes), 0.000001);
     }
 
-    public function test_train_segment_is_straight_line(): void
+    public function test_train_segment_follows_the_trains_with_fewest_changes(): void
     {
-        Http::fake(['api.heigit.org/openrouteservice/*' => Http::response(status: 500)]);
+        $this->travelTo('2026-11-28 15:00:00');
+        Http::fake([
+            'api.heigit.org/openrouteservice/*' => Http::response(status: 500),
+            'api.transitous.org/*' => Http::response($this->trains()),
+        ]);
+        $segment = $this->tripWith([self::BERLIN, self::PARIS])->segments()->sole();
+
+        $this->patchJson(route('segments.update', $segment), ['transport' => 'train'])
+            ->assertOk()
+            ->assertJsonPath('data.geometry.coordinates', [[-120.2, 38.5], [-120.2, 38.5], [-120.95, 40.7], [-126.453, 43.252]])
+            ->assertJsonPath('data.distance_km', 788.9)
+            ->assertJsonPath('data.is_approximate', false);
+        Http::assertSent(fn (Request $request): bool => str_contains($request->url(), 'api.transitous.org/api/v1/plan')
+            && $request->hasHeader('User-Agent', 'RTH/1.0 (+https://github.com/IlirionMK/RTH)')
+            && $request['fromPlace'] === '52.52,13.405'
+            && $request['toPlace'] === '48.8566,2.3522'
+            && $request['time'] === '2026-12-01T07:00:00Z'
+            && str_contains($request['transitModes'], 'HIGHSPEED_RAIL')
+            && ! str_contains($request['transitModes'], 'BUS'));
+    }
+
+    public function test_train_segment_is_approximate_straight_line_when_no_trains_are_found(): void
+    {
+        Http::fake([
+            'api.heigit.org/openrouteservice/*' => Http::response(status: 500),
+            'api.transitous.org/*' => Http::response(['itineraries' => [], 'direct' => []]),
+        ]);
         $segment = $this->tripWith([self::BERLIN, self::PARIS])->segments()->sole();
 
         $this->patchJson(route('segments.update', $segment), ['transport' => 'train'])
             ->assertOk()
             ->assertJsonPath('data.geometry.coordinates', [[13.405, 52.52], [2.3522, 48.8566]])
             ->assertJsonPath('data.distance_km', 877.5)
-            ->assertJsonPath('data.is_approximate', false);
+            ->assertJsonPath('data.is_approximate', true);
+    }
+
+    public function test_command_draws_train_segments_along_rails(): void
+    {
+        Http::fake(['api.transitous.org/*' => Http::response($this->trains())]);
+        $train = Segment::factory()->create(['transport' => 'train']);
+        $car = Segment::factory()->create(['transport' => 'car']);
+
+        $this->artisan('app:reroute-trains')
+            ->expectsOutput('Train segments on rails: 1 of 1.')
+            ->assertSuccessful();
+
+        $this->assertSame(788.9, $train->refresh()->distance_km);
+        $this->assertCount(4, $train->geometry['coordinates']);
+        $this->assertSame(877.5, $car->refresh()->distance_km);
+        Http::assertSentCount(1);
     }
 
     public function test_moved_point_redraws_its_segments(): void
@@ -189,6 +231,30 @@ class SegmentRouteTest extends TestCase
                 'geometry' => ['type' => 'LineString', 'coordinates' => $coordinates],
                 'properties' => ['summary' => ['distance' => 1054321.0]],
             ]],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function trains(): array
+    {
+        return [
+            'itineraries' => [
+                [
+                    'duration' => 30000,
+                    'transfers' => 2,
+                    'legs' => [['mode' => 'REGIONAL_RAIL', 'legGeometry' => ['points' => '??_ibE_ibE', 'precision' => 5]]],
+                ],
+                [
+                    'duration' => 36000,
+                    'transfers' => 0,
+                    'legs' => [
+                        ['mode' => 'WALK', 'legGeometry' => ['points' => '_p~iF~ps|U', 'precision' => 5]],
+                        ['mode' => 'HIGHSPEED_RAIL', 'legGeometry' => ['points' => '_p~iF~ps|U_ulLnnqC_mqNvxq`@', 'precision' => 5]],
+                    ],
+                ],
+            ],
         ];
     }
 }
