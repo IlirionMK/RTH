@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 
 import App from '@/App.vue'
-import { i18n } from '@/i18n'
+import { i18n, setLocale } from '@/i18n'
 import { token } from '@/lib/api'
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
@@ -48,6 +48,32 @@ describe('App', () => {
 
     expect(document.documentElement.classList.contains('dark')).toBe(true)
     document.documentElement.className = ''
+    localStorage.clear()
+  })
+
+  it('applies the language saved in the profile', async () => {
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    token.value = null
+    await router.push('/')
+    await router.isReady()
+    mount(App, { global: { plugins: [pinia, router, i18n] } })
+
+    useAuthStore().setUser({
+      id: 1,
+      name: 'Test User',
+      email: 'test@example.com',
+      pending_email: null,
+      role: 'user',
+      is_public: false,
+      locale: 'en',
+      theme: 'light',
+    })
+    await nextTick()
+
+    expect(i18n.global.locale.value).toBe('en')
+    expect(document.documentElement.lang).toBe('en')
+    setLocale('pl')
     localStorage.clear()
   })
 })

@@ -3,8 +3,9 @@ import { computed, ref, watch } from 'vue'
 
 import { createToken, deleteToken, register as createUser } from '@/api/auth'
 import type { LoginPayload, RegisterPayload } from '@/api/auth'
-import { getProfile, updateProfile } from '@/api/profile'
+import { getProfile, type ProfileChanges, updateProfile } from '@/api/profile'
 import { guestTheme } from '@/composables/useTheme'
+import { guestLocale } from '@/i18n'
 import { token } from '@/lib/api'
 import type { User } from '@/types/user'
 
@@ -26,11 +27,22 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = result.token
     user.value = result.user
 
+    const changes: ProfileChanges = {}
+
     if (guestTheme.value && guestTheme.value !== result.user.theme) {
-      user.value = await updateProfile({ theme: guestTheme.value }).catch(() => result.user)
+      changes.theme = guestTheme.value
+    }
+
+    if (guestLocale.value && guestLocale.value !== result.user.locale) {
+      changes.locale = guestLocale.value
+    }
+
+    if (Object.keys(changes).length > 0) {
+      user.value = await updateProfile(changes).catch(() => result.user)
     }
 
     guestTheme.value = null
+    guestLocale.value = null
   }
 
   async function register(payload: RegisterPayload): Promise<void> {

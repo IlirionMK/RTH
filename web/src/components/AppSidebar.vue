@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 
 import AppLogo from '@/components/AppLogo.vue'
 import EffectsToggle from '@/components/EffectsToggle.vue'
+import LocaleToggle from '@/components/LocaleToggle.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -96,7 +97,12 @@ watch(() => route.fullPath, () => setOpenMobile(false))
     </SidebarContent>
 
     <SidebarFooter>
-      <div class="flex items-center gap-2 border-t border-sidebar-border px-2 pt-3">
+      <div class="flex items-center gap-1 border-t border-sidebar-border px-1 pt-2">
+        <EffectsToggle />
+        <ThemeToggle />
+        <LocaleToggle />
+      </div>
+      <div class="flex items-center gap-2 px-2">
         <Avatar>
           <AvatarFallback>{{ initials }}</AvatarFallback>
         </Avatar>
@@ -104,8 +110,6 @@ watch(() => route.fullPath, () => setOpenMobile(false))
           <p class="truncate text-sm font-medium">{{ auth.user?.name }}</p>
           <p class="truncate text-xs text-muted-foreground">{{ auth.user?.email }}</p>
         </div>
-        <EffectsToggle />
-        <ThemeToggle />
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="ghost" size="icon" :aria-label="$t('nav.logout')" @click="auth.logout()">

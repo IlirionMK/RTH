@@ -304,6 +304,9 @@
     "toLight": "Włącz jasny motyw",
     "toDark": "Włącz ciemny motyw"
   },
+  "locale": {
+    "switch": "{code} — zmień język na angielski"
+  },
   "effects": {
     "label": "Efekty animowane",
     "on": "Efekty animowane: włączone",

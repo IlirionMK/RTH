@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createToken, deleteToken, register } from '@/api/auth'
 import { getProfile, updateProfile } from '@/api/profile'
 import { guestTheme } from '@/composables/useTheme'
+import { guestLocale } from '@/i18n'
 import { token } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
 import type { User } from '@/types/user'
@@ -31,6 +32,7 @@ describe('auth store', () => {
   afterEach(() => {
     token.value = null
     guestTheme.value = null
+    guestLocale.value = null
     vi.resetAllMocks()
   })
 
@@ -71,6 +73,29 @@ describe('auth store', () => {
     expect(updateProfile).toHaveBeenCalledWith({ theme: 'dark' })
     expect(auth.user?.theme).toBe('dark')
     expect(guestTheme.value).toBeNull()
+  })
+
+  it('sends the theme and the language chosen before login to the profile at once', async () => {
+    vi.mocked(updateProfile).mockResolvedValue({ ...user, theme: 'dark', locale: 'en' })
+    guestTheme.value = 'dark'
+    guestLocale.value = 'en'
+    const auth = useAuthStore()
+
+    await auth.login({ email: 'test@example.com', password: 'secret-password' })
+
+    expect(updateProfile).toHaveBeenCalledExactlyOnceWith({ theme: 'dark', locale: 'en' })
+    expect(auth.user?.locale).toBe('en')
+    expect(guestLocale.value).toBeNull()
+  })
+
+  it('keeps the profile language when the guest chose the same one', async () => {
+    guestLocale.value = 'pl'
+    const auth = useAuthStore()
+
+    await auth.login({ email: 'test@example.com', password: 'secret-password' })
+
+    expect(updateProfile).not.toHaveBeenCalled()
+    expect(guestLocale.value).toBeNull()
   })
 
   it('keeps the profile theme when nothing was chosen before login', async () => {
