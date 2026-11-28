@@ -2,6 +2,7 @@ import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { listAdminUsers, updateAdminUser } from '@/api/admin'
 import { i18n } from '@/i18n'
 import { useAuthStore } from '@/stores/auth'
@@ -86,6 +87,14 @@ describe('AdminUsersView', () => {
     expect(button('Zablokuj: Admin User')?.disabled).toBe(true)
     expect(button('Zablokuj: Test User')?.disabled).toBe(false)
     expect((wrapper.find('select[aria-label="Rola: Admin User"]').element as HTMLSelectElement).disabled).toBe(true)
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.useRealTimers()
+    mockAccounts()
+    const wrapper = await mountUsers()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('filters by role and searches after a pause in typing', async () => {

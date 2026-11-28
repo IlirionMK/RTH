@@ -1,6 +1,7 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { listTrips } from '@/api/trips'
 import { i18n } from '@/i18n'
 import type { Page, Point, Trip } from '@/types/trip'
@@ -63,6 +64,14 @@ describe('TripsView', () => {
     expect(wrapper.text()).toMatch(/4\s?115\s+km/)
     const link = wrapper.findAllComponents(RouterLinkStub).find((item) => item.text() === 'Summer Trip')
     expect(link?.props('to')).toEqual({ name: 'trips.edit', params: { id: 1 } })
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.mocked(listTrips).mockResolvedValue(page([summer]))
+    const wrapper = mountTrips()
+    await flushPromises()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('invites to add the first trip', async () => {

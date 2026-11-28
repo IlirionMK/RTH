@@ -3,6 +3,7 @@ import { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { register } from '@/api/auth'
 import { i18n } from '@/i18n'
 import { token } from '@/lib/api'
@@ -54,6 +55,12 @@ describe('RegisterView', () => {
 
     expect(wrapper.find('#password-error').text()).toBe('The password field confirmation does not match.')
     expect(wrapper.find('#password').attributes('aria-invalid')).toBe('true')
+  })
+
+  it('has no accessibility errors', async () => {
+    const wrapper = await mountRegister()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('asks to confirm the e-mail after registration', async () => {

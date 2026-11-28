@@ -45,7 +45,7 @@ async function submit(): Promise<void> {
   <Card v-if="sentTo">
     <CardHeader>
       <MailCheck class="mb-2 size-8 text-muted-foreground" aria-hidden="true" />
-      <CardTitle class="text-xl">{{ $t('register.sent.title') }}</CardTitle>
+      <CardTitle class="text-xl"><h1>{{ $t('register.sent.title') }}</h1></CardTitle>
       <CardDescription class="text-pretty">{{ $t('register.sent.description', { email: sentTo }) }}</CardDescription>
     </CardHeader>
     <CardContent>
@@ -56,7 +56,7 @@ async function submit(): Promise<void> {
   </Card>
   <Card v-else>
     <CardHeader>
-      <CardTitle class="text-xl">{{ $t('register.title') }}</CardTitle>
+      <CardTitle class="text-xl"><h1>{{ $t('register.title') }}</h1></CardTitle>
       <CardDescription>{{ $t('register.description') }}</CardDescription>
     </CardHeader>
     <CardContent>

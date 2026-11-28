@@ -2,6 +2,7 @@ import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/te
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { getTrip } from '@/api/trips'
 import { i18n } from '@/i18n'
 import { useAuthStore } from '@/stores/auth'
@@ -83,6 +84,13 @@ describe('TripMapView', () => {
       [2.3522, 48.8566],
     ])
     expect(map.props('countries')).toEqual(['DE', 'FR'])
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.mocked(getTrip).mockResolvedValue(trip)
+    const wrapper = await mountMap()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('lists the segments next to the map with the trip summary and legend', async () => {

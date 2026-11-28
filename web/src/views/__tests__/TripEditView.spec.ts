@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 
+import { axeViolations } from '@/__tests__/axe'
 import { addPoint, movePoint } from '@/api/points'
 import { updateSegment } from '@/api/segments'
 import { createTrip, deleteTrip, getTrip } from '@/api/trips'
@@ -136,6 +137,14 @@ describe('TripEditView', () => {
     expect(wrapper.text()).toContain('Berlin')
     expect(wrapper.text()).toContain('Francja')
     expect(wrapper.text()).toMatch(/878\s+km/)
+  })
+
+  it('has no accessibility errors', async () => {
+    vi.mocked(getTrip).mockResolvedValue(trip)
+    const wrapper = mountEditor(1)
+    await flushPromises()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('opens the map instead of the editor for a trip of another user', async () => {

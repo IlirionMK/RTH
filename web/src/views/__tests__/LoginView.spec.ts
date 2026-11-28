@@ -3,6 +3,7 @@ import { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { createToken } from '@/api/auth'
 import { i18n } from '@/i18n'
 import { token } from '@/lib/api'
@@ -65,6 +66,12 @@ describe('LoginView', () => {
     expect(wrapper.find('#email-error').text()).toBe('These credentials do not match our records.')
     expect(wrapper.find('#email').attributes('aria-invalid')).toBe('true')
     expect(wrapper.find('#email').attributes('aria-describedby')).toBe('email-error')
+  })
+
+  it('has no accessibility errors', async () => {
+    const wrapper = await mountLogin()
+
+    expect(await axeViolations(wrapper)).toEqual([])
   })
 
   it('opens the trips after login', async () => {

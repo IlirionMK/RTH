@@ -156,56 +156,58 @@ onMounted(load)
 
     <Card v-else class="py-0">
       <CardContent class="flex flex-col gap-4 p-0 pb-4">
-        <Table class="hidden md:table">
-          <TableHeader>
-            <TableRow>
-              <TableHead class="pl-4">{{ $t('admin.name') }}</TableHead>
-              <TableHead>{{ $t('admin.email') }}</TableHead>
-              <TableHead>{{ $t('admin.role') }}</TableHead>
-              <TableHead>{{ $t('admin.status') }}</TableHead>
-              <TableHead class="text-right">{{ $t('admin.trips') }}</TableHead>
-              <TableHead>{{ $t('admin.created') }}</TableHead>
-              <TableHead class="pr-4 text-right">{{ $t('admin.actions') }}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow v-for="user in users" :key="user.id">
-              <TableCell class="pl-4 font-medium">{{ user.name }}</TableCell>
-              <TableCell>{{ user.email }}</TableCell>
-              <TableCell>
-                <NativeSelect
-                  size="sm"
-                  :model-value="user.role"
-                  :disabled="isSelf(user)"
-                  :aria-label="$t('admin.roleOf', { name: user.name })"
-                  @update:model-value="changeRole(user, $event as Role)"
-                >
-                  <NativeSelectOption value="user">{{ $t('admin.roles.user') }}</NativeSelectOption>
-                  <NativeSelectOption value="admin">{{ $t('admin.roles.admin') }}</NativeSelectOption>
-                </NativeSelect>
-              </TableCell>
-              <TableCell>
-                <Badge :variant="user.is_blocked ? 'destructive' : 'outline'">
-                  <component :is="user.is_blocked ? Ban : Check" aria-hidden="true" />
-                  {{ $t(user.is_blocked ? 'admin.blockedStatus' : 'admin.active') }}
-                </Badge>
-              </TableCell>
-              <TableCell class="text-right tabular-nums">{{ user.trips_count }}</TableCell>
-              <TableCell class="tabular-nums">{{ formatDate(user.created_at) }}</TableCell>
-              <TableCell class="pr-4 text-right">
-                <Button
-                  :variant="user.is_blocked ? 'outline' : 'destructive'"
-                  size="sm"
-                  :disabled="isSelf(user)"
-                  :aria-label="$t(user.is_blocked ? 'admin.unblockNamed' : 'admin.blockNamed', { name: user.name })"
-                  @click="blocking = user"
-                >
-                  {{ $t(user.is_blocked ? 'admin.unblock' : 'admin.block') }}
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div class="hidden md:block">
+          <Table :label="$t('admin.usersTitle')">
+            <TableHeader>
+              <TableRow>
+                <TableHead class="pl-4">{{ $t('admin.name') }}</TableHead>
+                <TableHead>{{ $t('admin.email') }}</TableHead>
+                <TableHead>{{ $t('admin.role') }}</TableHead>
+                <TableHead>{{ $t('admin.status') }}</TableHead>
+                <TableHead class="text-right">{{ $t('admin.trips') }}</TableHead>
+                <TableHead>{{ $t('admin.created') }}</TableHead>
+                <TableHead class="pr-4 text-right">{{ $t('admin.actions') }}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="user in users" :key="user.id">
+                <TableCell class="pl-4 font-medium">{{ user.name }}</TableCell>
+                <TableCell>{{ user.email }}</TableCell>
+                <TableCell>
+                  <NativeSelect
+                    size="sm"
+                    :model-value="user.role"
+                    :disabled="isSelf(user)"
+                    :aria-label="$t('admin.roleOf', { name: user.name })"
+                    @update:model-value="changeRole(user, $event as Role)"
+                  >
+                    <NativeSelectOption value="user">{{ $t('admin.roles.user') }}</NativeSelectOption>
+                    <NativeSelectOption value="admin">{{ $t('admin.roles.admin') }}</NativeSelectOption>
+                  </NativeSelect>
+                </TableCell>
+                <TableCell>
+                  <Badge :variant="user.is_blocked ? 'destructive' : 'outline'">
+                    <component :is="user.is_blocked ? Ban : Check" aria-hidden="true" />
+                    {{ $t(user.is_blocked ? 'admin.blockedStatus' : 'admin.active') }}
+                  </Badge>
+                </TableCell>
+                <TableCell class="text-right tabular-nums">{{ user.trips_count }}</TableCell>
+                <TableCell class="tabular-nums">{{ formatDate(user.created_at) }}</TableCell>
+                <TableCell class="pr-4 text-right">
+                  <Button
+                    :variant="user.is_blocked ? 'outline' : 'destructive'"
+                    size="sm"
+                    :disabled="isSelf(user)"
+                    :aria-label="$t(user.is_blocked ? 'admin.unblockNamed' : 'admin.blockNamed', { name: user.name })"
+                    @click="blocking = user"
+                  >
+                    {{ $t(user.is_blocked ? 'admin.unblock' : 'admin.block') }}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
 
         <ul class="flex flex-col divide-y md:hidden">
           <li v-for="user in users" :key="user.id" class="flex flex-col gap-3 p-4">

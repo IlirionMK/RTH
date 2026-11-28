@@ -145,25 +145,35 @@ async function savePassword(): Promise<void> {
         >
           <FieldLabel for="visibility-private">
             <Field orientation="horizontal">
-              <RadioGroupItem id="visibility-private" value="private" />
+              <RadioGroupItem
+                id="visibility-private"
+                value="private"
+                aria-labelledby="visibility-private-title"
+                aria-describedby="visibility-private-hint"
+              />
               <FieldContent>
-                <FieldTitle>
+                <FieldTitle id="visibility-private-title">
                   <Lock class="size-4" aria-hidden="true" />
                   {{ $t('profile.visibility.private') }}
                 </FieldTitle>
-                <FieldDescription>{{ $t('profile.visibility.privateHint') }}</FieldDescription>
+                <FieldDescription id="visibility-private-hint">{{ $t('profile.visibility.privateHint') }}</FieldDescription>
               </FieldContent>
             </Field>
           </FieldLabel>
           <FieldLabel for="visibility-public">
             <Field orientation="horizontal">
-              <RadioGroupItem id="visibility-public" value="public" />
+              <RadioGroupItem
+                id="visibility-public"
+                value="public"
+                aria-labelledby="visibility-public-title"
+                aria-describedby="visibility-public-hint"
+              />
               <FieldContent>
-                <FieldTitle>
+                <FieldTitle id="visibility-public-title">
                   <Globe class="size-4" aria-hidden="true" />
                   {{ $t('profile.visibility.public') }}
                 </FieldTitle>
-                <FieldDescription>{{ $t('profile.visibility.publicHint') }}</FieldDescription>
+                <FieldDescription id="visibility-public-hint">{{ $t('profile.visibility.publicHint') }}</FieldDescription>
               </FieldContent>
             </Field>
           </FieldLabel>

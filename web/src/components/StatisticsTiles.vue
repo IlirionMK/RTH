@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Card, CardContent } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import type { Statistics } from '@/types/map'
 
 const props = defineProps<{
@@ -25,14 +25,12 @@ const tiles = computed(() => {
 
 <template>
   <dl class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-    <Card v-for="tile in tiles" :key="tile.label" class="py-4">
-      <CardContent class="flex flex-col gap-1">
-        <dt class="text-sm text-muted-foreground">{{ tile.label }}</dt>
-        <dd class="text-3xl font-semibold tabular-nums">
-          {{ tile.value }}
-          <span v-if="tile.unit" class="text-base font-normal text-muted-foreground">{{ tile.unit }}</span>
-        </dd>
-      </CardContent>
+    <Card v-for="tile in tiles" :key="tile.label" class="gap-1 p-4">
+      <dt class="text-sm text-muted-foreground">{{ tile.label }}</dt>
+      <dd class="text-3xl font-semibold tabular-nums">
+        {{ tile.value }}
+        <span v-if="tile.unit" class="text-base font-normal text-muted-foreground">{{ tile.unit }}</span>
+      </dd>
     </Card>
   </dl>
 </template>

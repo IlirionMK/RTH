@@ -1,6 +1,7 @@
 import { enableAutoUnmount, flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { axeViolations } from '@/__tests__/axe'
 import { getSystemStatistics, listAdminUsers } from '@/api/admin'
 import { i18n } from '@/i18n'
 import type { AdminUser, SystemStatistics } from '@/types/admin'
@@ -62,11 +63,19 @@ describe('AdminDashboardView', () => {
     expect(wrapper.text()).not.toContain('user6@example.com')
   })
 
+  it('has no accessibility errors', async () => {
+    vi.mocked(getSystemStatistics).mockResolvedValue(statistics)
+    vi.mocked(listAdminUsers).mockResolvedValue({ data: [1, 2].map(account), meta: { current_page: 1, last_page: 1, total: 2 } })
+    const wrapper = await mountDashboard()
+
+    expect(await axeViolations(wrapper)).toEqual([])
+  })
+
   it('keeps a table of the monthly chart for screen readers', async () => {
     vi.mocked(getSystemStatistics).mockResolvedValue(statistics)
     vi.mocked(listAdminUsers).mockResolvedValue({ data: [], meta: { current_page: 1, last_page: 1, total: 0 } })
     const wrapper = await mountDashboard()
-    const rows = wrapper.findAll('table.sr-only tbody tr')
+    const rows = wrapper.findAll('.sr-only table tbody tr')
 
     expect(rows).toHaveLength(12)
     expect(rows[11]?.findAll('td').map((cell) => cell.text())).toEqual(['11', '22'])

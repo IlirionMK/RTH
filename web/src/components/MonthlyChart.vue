@@ -65,22 +65,24 @@ const detail = computed(() => {
         {{ monthName(month.month, 'short') }}
       </span>
     </div>
-    <table class="sr-only">
-      <caption>{{ $t('admin.chart') }}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{{ $t('admin.month') }}</th>
-          <th scope="col">{{ $t('admin.newUsers') }}</th>
-          <th scope="col">{{ $t('admin.newTrips') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="month in months" :key="month.month">
-          <th scope="row">{{ monthName(month.month, 'long') }}</th>
-          <td>{{ month.users }}</td>
-          <td>{{ month.trips }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="sr-only">
+      <table>
+        <caption>{{ $t('admin.chart') }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ $t('admin.month') }}</th>
+            <th scope="col">{{ $t('admin.newUsers') }}</th>
+            <th scope="col">{{ $t('admin.newTrips') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="month in months" :key="month.month">
+            <th scope="row">{{ monthName(month.month, 'long') }}</th>
+            <td>{{ month.users }}</td>
+            <td>{{ month.trips }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
