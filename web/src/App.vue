@@ -4,6 +4,7 @@ import { watch } from 'vue'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { useTheme } from '@/composables/useTheme'
+import { setLocale } from '@/i18n'
 import { useAuthStore } from '@/stores/auth'
 
 const { theme } = useTheme()
@@ -14,6 +15,16 @@ watch(
   (value) => {
     if (value) {
       theme.value = value
+    }
+  },
+  { immediate: true },
+)
+
+watch(
+  () => auth.user?.locale,
+  (value) => {
+    if (value) {
+      setLocale(value)
     }
   },
   { immediate: true },

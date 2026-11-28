@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue'
 import EffectsToggle from '@/components/EffectsToggle.vue'
+import LocaleToggle from '@/components/LocaleToggle.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 </script>
 
@@ -9,6 +10,7 @@ import ThemeToggle from '@/components/ThemeToggle.vue'
     <div class="absolute top-4 right-4 flex gap-1">
       <EffectsToggle />
       <ThemeToggle />
+      <LocaleToggle />
     </div>
     <AppLogo />
     <div class="flex w-full max-w-sm flex-col gap-6 [view-transition-name:auth-card]">

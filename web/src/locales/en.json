@@ -304,6 +304,9 @@
     "toLight": "Switch to light theme",
     "toDark": "Switch to dark theme"
   },
+  "locale": {
+    "switch": "{code} — switch the language to Polish"
+  },
   "effects": {
     "label": "Animated effects",
     "on": "Animated effects: on",
